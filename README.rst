@@ -5,10 +5,6 @@
 
 |coveralls| |version| |supported-versions|
 
-.. |coveralls| image:: https://coveralls.io/repos/trevorpogue/sections/badge.svg?branch=master&service=github
-    :alt: Coverage Status
-    :target: https://coveralls.io/r/trevorpogue/sections
-
 .. |version| image:: https://img.shields.io/pypi/v/sections.svg
     :alt: PyPI Package latest release
     :target: https://pypi.org/project/sections
@@ -16,6 +12,7 @@
 .. |supported-versions| image:: https://img.shields.io/pypi/pyversions/sections.svg
     :alt: Supported versions
     :target: https://pypi.org/project/sections
+
 
 .. end-badges
 
