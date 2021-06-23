@@ -3,8 +3,6 @@
 
 .. start-badges
 
-|coveralls| |version| |supported-versions|
-
 .. |version| image:: https://img.shields.io/pypi/v/sections.svg
     :alt: PyPI Package latest release
     :target: https://pypi.org/project/sections
