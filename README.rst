@@ -1,6 +1,10 @@
 [ s e | c t | i o | n s ]
 ==============================
 
+.. image:: https://api.codacy.com/project/badge/Grade/b95d6c7cb7074586b85311617538423d
+   :alt: Codacy Badge
+   :target: https://app.codacy.com/gh/trevorpogue/sections?utm_source=github.com&utm_medium=referral&utm_content=trevorpogue/sections&utm_campaign=Badge_Grade_Settings
+
 .. start-badges
 
 |version| |supported-versions|
