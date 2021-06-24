@@ -1,7 +1,12 @@
-from sections import sections, Section
-import pytest
 from copy import deepcopy
+
+import pytest
+
+from sections import Section
+from sections import sections
+
 from .test_doc_examples import test_docs_examples
+
 
 def get_basic_menu() -> Section:
     return sections(
@@ -57,9 +62,9 @@ def test_misc() -> None:
     with pytest.raises(ValueError):
         menu['Lunch'] = 0
     with pytest.raises(KeyError):
-        x = menu['Lunch']
+        menu['Lunch']
     with pytest.raises(AttributeError):
-        x = menu.lunch
+        menu.lunch
     # test getattr through __call__
     menu = get_basic_menu()
     assert menu('names') == ['Breakfast', 'Dinner']
@@ -77,6 +82,11 @@ def test_misc() -> None:
     )
     assert menu.mains == ['Bacon&Eggs', 'Burger']
     assert menu.sides == 'HashBrown'
+    # test full_dict
+    menu = sections('Breakfast', 'Dinner', sides=['HashBrown', 'Fries'])
+    assert repr(menu('sides', 'full_dict')) == repr({
+        'Breakfast': 'HashBrown', 'Dinner': 'Fries'
+    })
 
 
 def assert_menu(menu: Section) -> None:
@@ -140,7 +150,7 @@ def test_misc_overrides() -> None:
         s0.setdefault(1, 1)
     s0 = sections(x=[0, 1])
     s0.popitem()
-    d = {s0:0}
+    d = {s0: 0}
     for k in d:
         assert k is s0
         # assert repr(k) == "'section'"
@@ -171,8 +181,8 @@ def test_gettypes() -> None:
     tree = sections(
         *names,
         nodenames=[{'root'},
-                  [{'child0'}, 'leaf0', 'leaf1'],
-                  [{'child1'}, 'leaf2', 'leaf3']]
+                   [{'child0'}, 'leaf0', 'leaf1'],
+                   [{'child1'}, 'leaf2', 'leaf3']]
     )
     assert_tree(tree)
     # dict
@@ -186,7 +196,6 @@ def test_gettypes() -> None:
     }
     assert tree('y', gettype=dict) == {'child0': 0, 'child1': 1}
     assert tree('name', gettype=dict) == {'root': 'root'}
-    d = tree('name', gettype='fast_dict')
     for yvalue, yiter in zip([tree.name], tree('name', gettype=iter)):
         assert yvalue == yiter
     for value, iter_ in zip(tree.y, tree('y', gettype=iter)):

@@ -160,7 +160,7 @@ def test_docs_examples() -> None:
     assert library.books['Harry Potter'].price == 8
     import pytest
     with pytest.raises(AttributeError):
-        this_should_raise_error = library['Fantasy'].genres
+        library['Fantasy'].genres
     # sphinx-end-subclassing
 
     # sphinx-begin-getattr-options

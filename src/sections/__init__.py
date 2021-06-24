@@ -7,11 +7,12 @@ __version__ = '0.0.0'
 __all__ = ['MetaSection', 'Section', 'NoneValue']
 
 import sys
+from typing import Type
 
 from .sections import MetaSection
 from .sections import Section
-from .sections import SectionKeysOrObjects, SectionAttrs
-from typing import Type
+from .sections import SectionAttrs
+from .sections import SectionKeysOrObjects
 
 NoneValue = Section._None
 

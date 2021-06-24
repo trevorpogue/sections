@@ -3,6 +3,8 @@
 
 .. start-badges
 
+|version| |supported-versions|
+
 .. |version| image:: https://img.shields.io/pypi/v/sections.svg
     :alt: PyPI Package latest release
     :target: https://pypi.org/project/sections
@@ -333,7 +335,7 @@ Inheriting Section is easy, the only requirement is to call super().__init__(\*\
     assert library.books['Harry Potter'].price == 8
     import pytest
     with pytest.raises(AttributeError):
-        this_should_raise_error = library['Fantasy'].genres
+        library['Fantasy'].genres
 
 Section.____init__() assigns the kwds values passed to it to the object attributes, and the passed kwds are generated during instantiation by a metaclass.
 

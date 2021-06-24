@@ -3,11 +3,21 @@ Flexible tree data structures for organizing lists and dicts into sections.
 https://github.com/trevorpogue/sections
 """
 
-from itertools import chain, repeat
 from copy import copy
-from typing import Set, List, Optional, Union, Any, Dict, Type
-from typing import NewType, Tuple, Iterable
+from itertools import chain
+from itertools import repeat
 from types import FunctionType
+from typing import Any
+from typing import Dict
+from typing import Iterable
+from typing import List
+from typing import NewType
+from typing import Optional
+from typing import Set
+from typing import Tuple
+from typing import Type
+from typing import Union
+
 from pluralizer import Pluralizer
 
 # SectionAttrs: dict containing user-defined attributes to set for Section
@@ -383,8 +393,8 @@ class Section(dict, metaclass=MetaSection):
     def node_withchildren_fromiter(self, itr: iter) -> Section:
         """
         Perform a general form of the task performed in
-        :meth:`leaves <Section.leaves>`. Return a Section node with any children
-        referenced in the iterable from the `itr` argument.
+        :meth:`leaves <Section.leaves>`. Return a Section node with any
+        children referenced in the iterable from the `itr` argument.
         """
         node = self.cls()
         for leaf in itr:
@@ -736,7 +746,7 @@ class Section(dict, metaclass=MetaSection):
             self, breadthfirst: bool = True, _topcall: bool = True
     ) -> str:
         """
-        Print the output of :met:`node_str <Section.node_str` for self and all
+        Print the output of :meth:`node_str <Section.node_str` for self and all
         of its descendants.
         """
         s = ''
