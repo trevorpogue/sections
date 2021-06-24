@@ -75,4 +75,4 @@ docs/build
 .mypy_cache/
 
 # Debugging logs
-\*.*log\*
+*outlog
