@@ -15,7 +15,6 @@ from .types import SectionType
 
 
 class Meta(type):
-
     """
     Parses args and kwds passed to a sections() call or :class:`Section
     <Section>` instantiation and returns a Section tree structure. Parses
@@ -60,6 +59,19 @@ class Meta(type):
         """
         node_attrs, children_attrs = {}, {}
         keyname = self.singular_keyname
+        keys = self._parse_keys(args, kwds, keyname)
+        for k, v in {**kwds, **keys}.items():
+            self._parse_node_attrs(k, v, node_attrs, children_attrs)
+        self._fix_key_if_invalid(node_attrs, parent, keyname)
+        node_attrs['_keyname'] = keyname
+        return node_attrs, children_attrs, keyname
+
+    def _parse_keys(
+            self,
+            args: SectionKeysOrObjects,
+            kwds: SectionAttr,
+            keyname: str
+    ) -> None:
         keys = {}
         if self._dict_haskey(kwds, keyname):
             keys[keyname] = kwds.get(keyname)
@@ -68,11 +80,7 @@ class Meta(type):
             keys[keyname] = kwds.get(self.plural_keyname)
         if not self._dict_haskey(keys, keyname):
             keys[keyname] = self._getkeys_from_argskwds(args, kwds)
-        for k, v in {**kwds, **keys}.items():
-            self._parse_node_attrs(k, v, node_attrs, children_attrs)
-        self._fix_key_if_invalid(node_attrs, parent, keyname)
-        node_attrs['_keyname'] = keyname
-        return node_attrs, children_attrs, keyname
+        return keys
 
     def _getkeys_from_argskwds(
             self,

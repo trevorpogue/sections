@@ -5,7 +5,8 @@ import pytest
 from sections import Section
 from sections import sections
 
-from .test_doc_examples import test_docs_examples
+from .test_doc_examples import test_docs_examples_details
+from .test_doc_examples import test_docs_examples_usage
 
 
 def get_basic_menu() -> Section:
@@ -20,7 +21,7 @@ def func_for_property_test() -> str:
     return 'name'
 
 
-def test_misc() -> None:
+def test_misc1() -> None:
     # test children from dict
     menu = get_basic_menu()
     # print(menu)
@@ -51,6 +52,9 @@ def test_misc() -> None:
         sides=['HashBrown', 'Fries'],
     )
     assert_menu(menu)
+
+
+def test_misc2() -> None:
     # test corner case setting names to property or callable (invalid values)
     menu = sections(
         name=property(func_for_property_test),
@@ -246,6 +250,8 @@ def test_use_pluralsingular() -> None:
 
 def test_options_variations() -> None:
     Section.use_cache = False
-    test_docs_examples()
+    test_docs_examples_usage()
+    test_docs_examples_details()
     Section.use_cache = True
-    test_docs_examples()
+    test_docs_examples_usage()
+    test_docs_examples_details()

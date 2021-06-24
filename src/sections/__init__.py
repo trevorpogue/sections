@@ -1,5 +1,4 @@
-"""
-Flexible tree data structures for organizing lists and dicts into sections.
+"""Flexible tree data structures for organizing lists and dicts into sections.
 
 https://github.com/trevorpogue/sections
 """
@@ -33,6 +32,7 @@ class Sections:
         class Section(_Section):
 
             """Unique Section class creation."""
+
         return Section
 
     def __call__(

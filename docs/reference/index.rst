@@ -6,3 +6,4 @@ The following describes the available interface with the Section class, the clas
 .. autoclass:: sections.Section
    :special-members: __call__, __setitem__, __getitem__, __setattr__, __getattr__, __iter__
    :members:
+   :inherited-members:

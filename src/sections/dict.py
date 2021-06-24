@@ -8,7 +8,6 @@ from .types import SectionType
 
 
 class Dict:
-
     """Section dict overrides."""
 
     def __hash__(self) -> int:

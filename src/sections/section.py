@@ -1,5 +1,4 @@
-"""
-Flexible tree data structures for organizing lists and dicts into sections.
+"""Flexible tree data structures for organizing lists and dicts into sections.
 
 https://github.com/trevorpogue/sections
 """
@@ -21,7 +20,6 @@ from .types import SectionType
 
 class Section(Node, Dict, AttrParser, StringParser, dict,
               metaclass=Meta):
-
     """
     Objects instantiated by :class:`Section <Section>` are nodes in a sections
     tree structure. Each node has useful methods and properties for organizing

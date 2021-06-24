@@ -2,7 +2,6 @@ from typing import Any
 
 
 class StringParser:
-
     """String parsing methods for visualizing nodes and structures."""
 
     @property

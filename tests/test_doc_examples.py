@@ -1,4 +1,7 @@
-def test_docs_examples() -> None:
+import sections
+
+
+def test_docs_examples_usage() -> None:
     # sphinx-start-usage
     import sections
 
@@ -98,6 +101,8 @@ def test_docs_examples() -> None:
     demo_different_construction_techniques()
     # sphinx-end-books-construction
 
+
+def test_docs_examples_details() -> None:
     # In-Depth Tutorial
 
     # Sections Names

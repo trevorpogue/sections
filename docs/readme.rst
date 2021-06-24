@@ -161,7 +161,9 @@ If you don't like this feature, simply turn it off using the following:
                     :end-before: sphinx-end-plural-singular-disable
                     :dedent: 4
 
-Note, however, that this will still traverse descendant nodes to see if they contain the requested attribute. To stop using this feature also, access attributes using the get_node_attr_ method instead.
+Note, however, that this will still traverse descendant nodes to see if they
+contain the requested attribute. To stop using this feature also, access
+attributes using the ``Section.get_node_attr()`` method in References_ instead.
 
 --------------
 Section names
@@ -323,5 +325,3 @@ node objects and cannot be referenced by the user through strings.
 See the ``Section.__call__()`` method in the References_ section of the docs for more details on the ``gettype`` options.
 
 .. _References: https://sections.readthedocs.io/en/latest/reference/index.html
-
-.. _get_node_attr: https://sections.readthedocs.io/en/latest/reference/index.html#sections.Section.get_node_attr

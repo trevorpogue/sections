@@ -43,7 +43,6 @@ GetType = NewType('GetType', Union[
 
 
 class SectionNoneType:
-
     """
     Indicates the absence of a value as opposed to any possible user-defined
     value that can be given to an attribute. Using this instead of None allows

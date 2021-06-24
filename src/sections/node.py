@@ -6,7 +6,6 @@ from .types import SectionType
 
 
 class Node:
-
     """Generic tree-structure node-related logic."""
 
     @ property
@@ -37,11 +36,11 @@ class Node:
     @ property
     def children(self) -> SectionType:
         """
-        Get self nodes's children.
-        Returns a Section node that has no public attrs and has shallow copies
-        of self node's children as its children. This can be useful if self has
-        an attr `attr` but you want to access a list of the childrens' attr
-        `attr`, then write section.children.attr to access the attr list.
+        Get self nodes's children. Returns a Section node that has no public
+        attrs and has shallow copies of self node's children as its children.
+        This can be useful if self has an attr `attr` but you want to access a
+        list of the childrens' attr `attr`, then write section.children.attr to
+        access the attr list.
         """
         node = self.cls()
         node.update(self)
@@ -59,11 +58,11 @@ class Node:
     @ property
     def leaves(self) -> SectionType:
         """
-        Get all leaf node descendants of self.
-        Returns a Section node that has no public attrs and has shallow copies
-        of self node's leaves as its children. This can be useful if self has
-        an attr `attr` but you want to access a list of the leaves' attr
-        `attr`, then write section.leaves.attr to access the leaf attr list.
+        Get all leaf node descendants of self. Returns a Section node that has
+        no public attrs and has shallow copies of self node's leaves as its
+        children. This can be useful if self has an attr `attr` but you want to
+        access a list of the leaves' attr `attr`, then write
+        section.leaves.attr to access the leaf attr list.
         """
         return self.node_withchildren_fromiter(self.leaves_iter)
 

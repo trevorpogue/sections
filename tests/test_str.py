@@ -1,12 +1,11 @@
 import sections
 
 
-def test_str() -> None:
+def test_str_breadthfirst() -> None:
     """Test the printing string representation functions."""
     s = sections({'root'}, [{'c0'}, 'L0', 'L1'], [{'c1'}, 'L2', 'L3'])
     node_str = s.node_str()
     deep_str_breadthfirst = s.deep_str()
-    deep_str_depthfirst = s.deep_str(breadthfirst=False)
     expected_node_str = (
         "<class 'sections.Sections.UniqueSection.<locals>.Section'>:"
         + " root, parent\n"
@@ -53,7 +52,14 @@ def test_str() -> None:
         + "\n#######################################"
         + "########################################\n"
     )
+    assert (str(s) == 'root')
+    assert (node_str == expected_node_str)
+    assert (deep_str_breadthfirst == expected_deep_str_breadthfirst)
 
+
+def test_str_depthfirst() -> None:
+    s = sections({'root'}, [{'c0'}, 'L0', 'L1'], [{'c1'}, 'L2', 'L3'])
+    deep_str_depthfirst = s.deep_str(breadthfirst=False)
     expected_deep_str_depthfirst = (
         ""
         + "#######################################"
@@ -93,6 +99,4 @@ def test_str() -> None:
         + "#########################################\n"
     )
     assert (str(s) == 'root')
-    assert (node_str == expected_node_str)
-    assert (deep_str_breadthfirst == expected_deep_str_breadthfirst)
     assert (deep_str_depthfirst == expected_deep_str_depthfirst)
