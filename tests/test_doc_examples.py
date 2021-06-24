@@ -7,7 +7,7 @@ def test_docs_examples() -> None:
         mains=['Bacon&Eggs', 'Burger'],
         sides=['HashBrown', 'Fries'],
     )
-    # Resulting structure's API and the expected results
+    # Resulting structure's API and the expected results:
     assert menu.mains == ['Bacon&Eggs', 'Burger']
     assert menu.sides == ['HashBrown', 'Fries']
     assert menu['Breakfast'].main == 'Bacon&Eggs'
@@ -16,7 +16,9 @@ def test_docs_examples() -> None:
     assert menu['Dinner'].side == 'Fries'
     assert menu('sides', list) == ['HashBrown', 'Fries']
     assert menu('sides', dict) == {'Breakfast': 'HashBrown', 'Dinner': 'Fries'}
+    # root section/node:
     assert isinstance(menu, sections.Section)
+    # child sections/nodes:
     assert isinstance(menu['Breakfast'], sections.Section)
     assert isinstance(menu['Dinner'], sections.Section)
     # sphinx-end-usage
@@ -27,6 +29,17 @@ def test_docs_examples() -> None:
     assert tasks['pay bill'].status == 'completed'
     assert tasks['clean'].status == 'started'
     # sphinx-end-plural-singular
+
+    # sphinx-start-plural-singular-disable
+    import pytest
+    tasks = sections('pay bill', 'clean', status=['completed', 'started'])
+    assert tasks.statuses == ['completed', 'started']
+    sections.Section.use_pluralsingular = False  # turn off for all future objs
+    tasks = sections('pay bill', 'clean', status=['completed', 'started'])
+    with pytest.raises(AttributeError):
+        tasks.statuses  # this now raises an AttributeError
+    # sphinx-end-plural-singular-disable
+    sections.Section.use_pluralsingular = True  # set back
 
     # sphinx-start-properties
     schedule = sections(
@@ -42,7 +55,6 @@ def test_docs_examples() -> None:
     # sphinx-start-books-construction
     def demo_different_construction_techniques():
         """Example construction techniques for producing the same structure."""
-
         # Building section-by-section
         books = sections()
         books['LOTR'] = sections(topic='Hobbits', author='JRR Tolkien')
@@ -74,7 +86,7 @@ def test_docs_examples() -> None:
         demo_resulting_object_api(books)
 
     def demo_resulting_object_api(books):
-        """Example Sections API and expected results."""
+        """Example Section structure API and expected results."""
         assert books.names == ['LOTR', 'Harry Potter']
         assert books.topics == ['Hobbits', 'Wizards']
         assert books.authors == ['JRR Tolkien', 'JK Rowling']
@@ -100,17 +112,26 @@ def test_docs_examples() -> None:
     assert books['Harry Potter'].name == 'Harry Potter'
     # sphinx-end-names
 
+    # sphinx-start-names-printing
+    sect = sections(x=['a', 'b'])
+    assert sect.sections.names == [0, 1]
+    assert sect.name is sections.SectionNone
+
+    # the string representation of sections.SectionNone is 'section':
+    assert str(sect.name) == 'section'
+    # sphinx-end-names-printing
+
     # Parent Names
     # sphinx-start-parent-names
     library = sections(
-        {"Trevor's Bookshelf"},
+        {"My Bookshelf"},
         [{'Fantasy'}, 'LOTR', 'Harry Potter'],
         [{'Academic'}, 'Advanced Mathematics', 'Physics for Engineers'],
         topics=[{'All my books'},
                 [{'Imaginary things'}, 'Hobbits', 'Wizards'],
                 [{'School'}, 'Numbers', 'Forces']],
     )
-    assert library.name == "Trevor's Bookshelf"
+    assert library.name == "My Bookshelf"
     assert library.sections.names == ['Fantasy', 'Academic']
     assert library['Fantasy'].sections.names == ['LOTR', 'Harry Potter']
     assert library['Academic'].sections.names == [
@@ -206,6 +227,6 @@ def test_docs_examples() -> None:
     sect = sections(x=['a', 'b'])
 
     assert sect.sections.names == [0, 1]
-    assert sect.name is sections.NoneValue
-    # the string representation of sections.NoneValue is 'section'
+    assert sect.name is sections.SectionNone
+    # the string representation of sections.SectionNone is 'root'
     assert str(sect.name) == 'section'

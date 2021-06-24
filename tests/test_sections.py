@@ -159,9 +159,8 @@ def test_misc_overrides() -> None:
 
 
 def test_SectionNoneType() -> None:
-    from sections.sections import SectionNoneType
-    s = SectionNoneType()
-    assert str(s) == 'section'
+    from sections import SectionNone
+    assert str(SectionNone) == 'section'
 
 
 def test_gettypes() -> None:
@@ -211,11 +210,38 @@ def assert_tree(tree) -> None:
     assert tree['child1'].children.nodenames == ['leaf2', 'leaf3']
 
 
+def test_get_node_attr() -> None:
+    sect = sections({0}, 1, 2, x=[0, 1])
+    assert sect.get_node_attr('name') == 0
+    assert sect.get_node_attr('names') == 0
+    with pytest.raises(AttributeError):
+        assert sect.get_node_attr('x')
+
+
 def test_use_pluralsingular() -> None:
-    s = sections([0, 1])
+    s = sections(0, 1)
     s.cls.use_pluralsingular = False
     with pytest.raises(AttributeError):
-        s.names
+        s[0].names
+    # log2(s[0].names)
+    # return
+    sect = sections({0}, 1, 2, x=[0, 1])
+    assert sect.name == 0
+    assert sect.names == 0
+    assert sect[1].name == 1
+    assert sect[1].names == 1
+    assert sect.get_node_attr('name') == 0
+    assert sect.get_node_attr('names') == 0
+
+    sections.Section.use_pluralsingular = False  # turn off for all structures
+    sect = sections({0}, 1, 2)
+    assert sect.name == 0
+    with pytest.raises(AttributeError):
+        sect.names
+    assert sect[1].name == 1
+    with pytest.raises(AttributeError):
+        sect[1].names
+    sections.Section.use_pluralsingular = True  # set back
 
 
 def test_options_variations() -> None:

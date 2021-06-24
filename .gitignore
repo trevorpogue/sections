@@ -73,3 +73,6 @@ docs/build
 
 # Mypy Cache
 .mypy_cache/
+
+# Debugging logs
+\*.*log\*
