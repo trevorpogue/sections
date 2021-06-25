@@ -43,7 +43,7 @@ class Node:
         access the attr list.
         """
         node = self.cls()
-        node.update(self)
+        node._update(self)
         setattr(node, node._keyname, SectionNone)
         return node
 

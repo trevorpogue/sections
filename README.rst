@@ -117,7 +117,7 @@ Spend less time deciding between using the singular or plural form for an attrib
     assert tasks['pay bill'].status == 'completed'
     assert tasks['clean'].status == 'started'
 
-If you don't like this feature, simply turn it off as shown in the **Details - Attribute access settings** section.
+If you don't like this feature, simply turn it off as shown in the **Details - Plural/singular attribute settings** section.
 
 --------------------------------------------------------------------
 Properties: Easily add on the fly
@@ -148,7 +148,6 @@ Construct section-by-section, section-wise, attribute-wise, or other ways:
 
     def demo_different_construction_techniques():
         """Example construction techniques for producing the same structure."""
-
         # Building section-by-section
         books = sections()
         books['LOTR'] = sections(topic='Hobbits', author='JRR Tolkien')
@@ -286,7 +285,7 @@ Set the default return type when accessing structure attributes by changing ``Se
     assert menu.sides == ['HashBrown', 'Fries']
     assert menu['Breakfast']('side') == {'Breakfast': 'HashBrown'}
 
-    menu.cls.default_gettype = dict           # set for all nodes in ``menu``
+    menu.cls.default_gettype = dict           # set for all nodes in `menu`
     assert menu('sides') == {'Breakfast': 'HashBrown', 'Dinner': 'Fries'}
     assert menu['Breakfast']('side') == {'Breakfast': 'HashBrown'}
 
@@ -299,10 +298,16 @@ Set the default return type when accessing structure attributes by changing ``Se
 The above will also work for accessing attributes in the form ``object.attr`` but only if the node does not contain the attribute ``attr``, otherwise it will return the non-iterable raw value for ``attr``. Therefore, for consistency, access attributes using `Section.__call__()`_ like above if you wish to **always receive an iterable** form of the attributes.
 
 ----------------------------------------------------------------
-Attribute access settings
+Plural/singular attribute settings
 ----------------------------------------------------------------
 
-When an attribute is not found in a Section node, both the plural and singular forms of the word are then checked to see if the node contains the attribute under those forms of the word. If they are still not found, the node will recursively repeat the same search on each of its children, concatenating the results into a list or dict. The true attribute name in each node supplied a corresponding value is whatever name was given in the keyword argument's key (i.e. ``status`` in the above example).
+When an attribute is not found in a Section node, both the plural and singular
+forms of the word are then checked to see if the node contains the attribute
+under those forms of the word. If they are still not found, the node will
+recursively repeat the same search on each of its children, concatenating the
+results into a list or dict. The true attribute name in each node supplied a
+corresponding value is whatever name was given in the keyword argument's key
+(i.e. ``status`` in the example below).
 
 If you don't like this feature, simply turn it off using the following:
 
@@ -324,7 +329,7 @@ attributes using the `Section.get_node_attr()`_ method instead.
 Properties/methods
 ----------------------------------------------------------------
 
-Each call returns a structure containing nodes of a unique class created in a class factory function, where the unique class definition contains no logic except that it inherits from the Section class. This allows properties/methods added to one structure's class definition to not affect the class definitions of nodes from other structures.
+Each ``sections()`` call returns a structure containing nodes of a unique class created in a class factory function, where the unique class definition contains no logic except that it inherits from the Section class. This allows properties/methods added to one structure's class definition to not affect the class definitions of nodes from other structures.
 
 --------------
 Printing
@@ -452,7 +457,7 @@ The caches allow instant reading of sub-lists/dicts in Θ(1) time and can often 
 
 .. code-block:: python
 
-    sect = sections(*[[[42] * 10] * 10] * 10] * 10])
+    sect = sections(*[[[[[42] * 10] * 10] * 10] * 10])
     sect.use_cache = False              # turn off for just the root node
     sect.cls.use_cache = False          # turn off for all nodes in `sect`
     sections.Section.use_cache = False  # turn off for all structures
@@ -462,8 +467,9 @@ currently slower than the other options. For performance-critical uses, use the
 other options for ``gettype``.
 Alternatively, if a dict is required just for
 visual printing purposes, use the faster ``'full_dict'`` option for ``gettype``
-instead. This option returns dicts with valid values with keys that have string
-representations of the node names, but the keys are in reality references to
+instead. This option returns dicts with valid values with keys that also have
+string
+representations of the node names, but the raw form of the keys are references to
 node objects and cannot be referenced by the user through strings.
 See the `Section.__call__()`_ method in the References section of the docs for more details on the ``gettype`` options.
 

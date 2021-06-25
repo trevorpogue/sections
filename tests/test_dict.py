@@ -35,6 +35,12 @@ def test_not_implemented() -> None:
         menu.copy()
     with pytest.raises(NotImplementedError):
         menu.setdefault(1, 1)
+    with pytest.raises(NotImplementedError):
+        menu.fromkeys(1, x=1)
+    with pytest.raises(NotImplementedError):
+        menu.get(1, x=1)
+    with pytest.raises(NotImplementedError):
+        menu.update(1, x=1)
 
 
 def test_pop_methods() -> None:

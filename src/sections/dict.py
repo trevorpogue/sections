@@ -32,10 +32,9 @@ class Dict:
         """
         return True
 
-    def update(self, *args: Any, **kwds: Any) -> None:
+    def _update(self, *args: Any, **kwds: Any) -> None:
         """
         Invalidate descendant attr cache after adding/removing nodes.
-        :meta private:.
         """
         self._invalidate_caches()
         super().update(*args, **kwds)
@@ -52,22 +51,40 @@ class Dict:
         """Return iterator over chilren."""
         return super().values()
 
-    def clear(self) -> None:
-        """Not supported yet. :meta private:."""
+    def update(self, *args: Any, **kwds: Any) -> None:
+        """Not supported."""
         raise NotImplementedError(
-            'Section.clear() is not yet implemented.'
+            'Section.update() is not implemented.'
+        )
+
+    def get(self, *args: Any, **kwds: Any) -> None:
+        """Not supported."""
+        raise NotImplementedError(
+            'Section.get() is not implemented.'
+        )
+
+    def fromkeys(self, *args: Any, **kwds: Any) -> None:
+        """Not supported."""
+        raise NotImplementedError(
+            'Section.fromkeys() is not implemented.'
+        )
+
+    def clear(self) -> None:
+        """Not supported."""
+        raise NotImplementedError(
+            'Section.clear() is not implemented.'
         )
 
     def copy(self) -> None:
-        """Not supported yet. :meta private:."""
+        """Not supported."""
         raise NotImplementedError(
-            'Section.copy() is not yet implemented.'
+            'Section.copy() is not implemented.'
         )
 
     def setdefault(self, *args: Any, **kwds: Any) -> Any:
-        """Not supported yet. :meta private:."""
+        """Not supported."""
         raise NotImplementedError(
-            'Section.setdefault() is not yet implemented.'
+            'Section.setdefault() is not implemented.'
         )
 
     def pop(self, name: Any) -> Any:
