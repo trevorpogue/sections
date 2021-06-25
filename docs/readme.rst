@@ -9,11 +9,11 @@
     * - docs
       - |docs|
     * - tests
+        | |coveralls| |codacy| |codeclimate|
+        | |codecov| |scrutinizer|
       - | |travis| |appveyor| |requires|
-        | |coveralls| |codecov|
-        | |scrutinizer| |codacy| |codeclimate|
     * - package
-      - | |version| |wheel| |supported-versions|
+      - | |version| |supported-versions| |wheel|
         | |supported-implementations| |commits-since|
 .. |docs| image:: https://readthedocs.org/projects/sections/badge/?style=flat
     :alt: Documentation Status
@@ -163,7 +163,7 @@ If you don't like this feature, simply turn it off using the following:
 
 Note, however, that this will still traverse descendant nodes to see if they
 contain the requested attribute. To stop using this feature also, access
-attributes using the ``Section.get_node_attr()`` method in References_ instead.
+attributes using the `Section.get_node_attr()`_ method instead.
 
 --------------
 Section names
@@ -325,3 +325,4 @@ node objects and cannot be referenced by the user through strings.
 See the ``Section.__call__()`` method in the References_ section of the docs for more details on the ``gettype`` options.
 
 .. _References: https://sections.readthedocs.io/en/latest/reference/index.html
+.. _Section.get_node_attr(): https://sections.readthedocs.io/en/latest/reference/#sections.Section.get_node_attr

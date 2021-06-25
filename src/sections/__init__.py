@@ -1,4 +1,5 @@
-"""Flexible tree data structures for organizing lists and dicts into sections.
+"""
+Flexible tree data structures for organizing lists and dicts into sections.
 
 https://github.com/trevorpogue/sections
 """

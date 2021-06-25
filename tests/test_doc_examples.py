@@ -151,23 +151,31 @@ def test_docs_examples_details() -> None:
     # Subclassing
     # sphinx-start-subclassing
     class Library(sections.Section):
+        """My library class."""
         def __init__(price="Custom default value", **kwds):
+            """Pass **kwds to super."""
             super().__init__(**kwds)
 
         @property
         def genres(self):
+            """A synonym for sections."""
             if self.isroot:
                 return self.sections
             else:
                 raise AttributeError('This library has only 1 level of genres')
 
         @property
-        def books(self): return self.leaves
+        def books(self):
+            """A synonym for leaves."""
+            return self.leaves
 
         @property
-        def titles(self): return self.names
+        def titles(self):
+            """A synonym for names."""
+            return self.names
 
         def critique(self, impression="Haven't read it yet", rating=0):
+            """Set the book price based on the impression."""
             self.review = impression
             self.price = rating * 2
 
@@ -189,7 +197,7 @@ def test_docs_examples_details() -> None:
         library['Fantasy'].genres
     # sphinx-end-subclassing
 
-    # sphinx-begin-getattr-options
+    # sphinx-start-getattr-options
     menu = sections('Breakfast', 'Dinner', sides=['HashBrown', 'Fries'])
 
     # return as list always, even if a single element is returned
@@ -210,7 +218,7 @@ def test_docs_examples_details() -> None:
     # options: https://sections.readthedocs.io/
     # sphinx-end-getattr-options
 
-    # sphinx-begin-gettype
+    # sphinx-start-gettype
     menu = sections('Breakfast', 'Dinner', sides=['HashBrown', 'Fries'])
 
     menu['Breakfast'].default_gettype = dict  # set for only 'Breakfast' node

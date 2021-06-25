@@ -73,7 +73,7 @@ class StringParser:
         of its descendants.
 
         :param breadthfirst: Set True to print descendants in a breadth-first
-        pattern or False for depth-first.
+               pattern or False for depth-first.
         """
         s = ''
         s += '#'*79 + '\n'
