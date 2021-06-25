@@ -21,12 +21,28 @@ def func_for_property_test() -> str:
     return 'name'
 
 
+def assert_menu(menu: Section) -> None:
+    assert menu.names == ['Breakfast', 'Dinner']
+    assert menu.sections.names == ['Breakfast', 'Dinner']
+    assert menu.children.names == ['Breakfast', 'Dinner']
+    assert menu.leaves.names == ['Breakfast', 'Dinner']
+    assert menu.entries.names == ['Breakfast', 'Dinner']
+    assert menu.mains == ['Bacon&Eggs', 'Burger']
+    assert menu.sides == ['HashBrown', 'Fries']
+    assert menu['Breakfast'].main == 'Bacon&Eggs'
+    assert menu['Breakfast'].side == 'HashBrown'
+    assert menu['Dinner'].main == 'Burger'
+    assert menu['Dinner'].side == 'Fries'
+    assert isinstance(menu, sections.Section)
+    assert isinstance(menu['Breakfast'], sections.Section)
+    assert isinstance(menu['Dinner'], sections.Section)
+
+
 def test_misc1() -> None:
     # test children from dict
     menu = get_basic_menu()
-    # print(menu)
     assert_menu(menu)
-    menu['Dinner'] = sections(main='Burger', side='Fries')
+    menu['Dinner'] = dict(main='Burger', side='Fries')
     assert_menu(menu)
     menu['Lunch'] = dict(main='BLT', side='LunchFries')
     assert menu['Lunch'].main == 'BLT'
@@ -91,23 +107,6 @@ def test_misc2() -> None:
     assert repr(menu('sides', 'full_dict')) == repr({
         'Breakfast': 'HashBrown', 'Dinner': 'Fries'
     })
-
-
-def assert_menu(menu: Section) -> None:
-    assert menu.names == ['Breakfast', 'Dinner']
-    assert menu.sections.names == ['Breakfast', 'Dinner']
-    assert menu.children.names == ['Breakfast', 'Dinner']
-    assert menu.leaves.names == ['Breakfast', 'Dinner']
-    assert menu.entries.names == ['Breakfast', 'Dinner']
-    assert menu.mains == ['Bacon&Eggs', 'Burger']
-    assert menu.sides == ['HashBrown', 'Fries']
-    assert menu['Breakfast'].main == 'Bacon&Eggs'
-    assert menu['Breakfast'].side == 'HashBrown'
-    assert menu['Dinner'].main == 'Burger'
-    assert menu['Dinner'].side == 'Fries'
-    assert isinstance(menu, sections.Section)
-    assert isinstance(menu['Breakfast'], sections.Section)
-    assert isinstance(menu['Dinner'], sections.Section)
 
 
 def test_cls_attrs() -> None:
@@ -227,8 +226,6 @@ def test_use_pluralsingular() -> None:
     s.cls.use_pluralsingular = False
     with pytest.raises(AttributeError):
         s[0].names
-    # log2(s[0].names)
-    # return
     sect = sections({0}, 1, 2, x=[0, 1])
     assert sect.name == 0
     assert sect.names == 0

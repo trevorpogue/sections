@@ -40,30 +40,28 @@ class StringParser:
         Neatly print the public attributes of the Section node and its class,
         as well as its types property output.
         """
-        s = ''
+        s = repr(self._name) + ' = <' + self._node_types + '>\n'
         other_params = {
-            str(self.cls): self._node_types,
+            'parent': self._name,
             'children': (list(self.keys())),
         }
         if self.isleaf:
             other_params.pop('children')
         attrs = {k: v for k, v in self.__dict__.items() if k[0] != '_'}
-        attrs.pop(self._keyname, None)
         attrs = {**other_params, **{self._keyname: str(self._name)}, **attrs}
+        attrs.pop(self._keyname, None)
         for name, value in attrs.items():
             s += self._parse_public_node_attrs(name, value)
         return s
 
     def _parse_public_node_attrs(self, name: Any, value: Any) -> str:
         from . import Section
-        final_namelen = 20
-        prev_namelen = len(name)
-        pad = ' ' * max(final_namelen - prev_namelen, 0)
+        pad = ''
         if isinstance(value, Section):
             value = repr(value._name)
         else:
             value = str(value) if name == str(self.cls) else repr(value)
-        return f'{name}{pad}: ' + value + '\n'
+        return f'    {name}{pad} = ' + value + '\n'
 
     def deep_str(
             self, breadthfirst: bool = True
@@ -75,12 +73,12 @@ class StringParser:
         :param breadthfirst: Set True to print descendants in a breadth-first
                pattern or False for depth-first.
         """
-        s = ''
-        s += '#'*79 + '\n'
+        s = '#' * 79 + '\n'
+        s += '<class ' + repr(self.cls.__name__) + '> structure\n\n'
         if breadthfirst:
-            s += self.node_str()
-        s += self._deep_str(breadthfirst=breadthfirst)
-        s += '#'*79 + '\n'
+            s += self.node_str() + '\n'
+        s += self._deep_str(breadthfirst=breadthfirst)[:-1]  # remove last '\n'
+        s += '#' * 79 + '\n'
         return s
 
     def _deep_str(self, breadthfirst: bool = True) -> str:
@@ -90,9 +88,9 @@ class StringParser:
         s = ''
         if breadthfirst:
             for key, child in self.items():
-                s += child.node_str()
+                s += child.node_str() + '\n'
         else:
-            s += self.node_str()
+            s += self.node_str() + '\n'
         for child in self.values():
             s += child._deep_str(breadthfirst=breadthfirst)
         return s

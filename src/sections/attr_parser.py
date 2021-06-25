@@ -135,15 +135,6 @@ class AttrParser:
             attr = self.__dict__.get(singular, SectionNone)
         return attr
 
-    def _check_for_attribute_arror(
-            self, name: str, attrs: AnyDict, gettype: GetType = 'default'
-    ) -> None:
-        """
-        Raise attribute error if none were found.
-        """
-        if attrs is SectionNone or not len(attrs):
-            raise AttributeError(name)
-
     def _parse_top_getattr(
             self,
             name: str,
@@ -158,25 +149,36 @@ class AttrParser:
         returned (not in an iterable), else raise AttributeError if no values
         are found.
         """
-        self._check_for_attribute_arror(name, attrs, gettype=gettype)
+        _check_for_attribute_arror(name, attrs, gettype=gettype)
         if gettype == 'default':
             gettype = self.default_gettype
         if gettype == 'hybrid':
             return (list(attrs.values()) if len(attrs) > 1
                     else next(iter(attrs.values())))  # return dict value[0]
         else:
-            return self._get_iterable_attrs(attrs, gettype=gettype)
+            return _get_iterable_attrs(attrs, gettype=gettype)
 
-    def _get_iterable_attrs(
-            self, attrs: AnyDict, gettype: GetType = 'default',
-    ) -> AnyDict:
-        """
-        Convert attrs from a dict to possibly a different requested iterable.
-        """
-        if gettype is list:
-            attrs = list(attrs.values())
-        elif gettype is dict:
-            attrs = literal_eval(repr(attrs))
-        elif gettype is iter:
-            attrs = attrs.values()
-        return attrs
+
+def _check_for_attribute_arror(
+        name: str, attrs: AnyDict, gettype: GetType = 'default'
+) -> None:
+    """
+    Raise attribute error if none were found.
+    """
+    if attrs is SectionNone or not len(attrs):
+        raise AttributeError(name)
+
+
+def _get_iterable_attrs(
+        attrs: AnyDict, gettype: GetType = 'default',
+) -> AnyDict:
+    """
+    Convert attrs from a dict to possibly a different requested iterable.
+    """
+    if gettype is list:
+        attrs = list(attrs.values())
+    elif gettype is dict:
+        attrs = literal_eval(repr(attrs))
+    elif gettype is iter:
+        attrs = attrs.values()
+    return attrs

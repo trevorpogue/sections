@@ -1,69 +1,6 @@
 [ s e | c t | i o | n s ]
 ==============================
 
-.. start-badges
-
-.. list-table::
-    :stub-columns: 1
-
-    * - tests
-      - | |coveralls|
-        | |scrutinizer| |codeclimate|
-        | |requires| |travis|
-    * - package
-      - | |version| |supported-versions| |wheel|
-        | |supported-implementations| |commits-since|
-.. |travis| image:: https://api.travis-ci.com/trevorpogue/sections.svg?branch=main
-    :alt: Travis-CI Build Status
-    :target: https://travis-ci.com/github/trevorpogue/sections
-
-.. |requires| image:: https://requires.io/github/trevorpogue/sections/requirements.svg?branch=main
-    :alt: Requirements Status
-    :target: https://requires.io/github/trevorpogue/sections/requirements/?branch=main
-
-.. |coveralls| image:: https://coveralls.io/repos/github/trevorpogue/sections/badge.svg
-    :alt: Coverage Status
-    :target: https://coveralls.io/github/trevorpogue/sections
-
-.. |codecov| image:: https://codecov.io/gh/trevorpogue/sections/branch/main/graphs/badge.svg?branch=main
-    :alt: Coverage Status
-    :target: https://codecov.io/github/trevorpogue/sections
-
-.. |codacy| image:: https://app.codacy.com/project/badge/Grade/92804e7a0df44f09b42bc6ee1664bc67
-    :alt: Codacy Code Quality Status
-    :target: https://www.codacy.com/gh/trevorpogue/sections/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=trevorpogue/sections&amp;utm_campaign=Badge_Grade
-
-.. |codeclimate| image:: https://codeclimate.com/github/trevorpogue/sections/badges/gpa.svg
-   :alt: CodeClimate Quality Status
-   :target: https://codeclimate.com/github/trevorpogue/sections
-
-.. |version| image:: https://img.shields.io/pypi/v/sections.svg
-    :alt: PyPI Package latest release
-    :target: https://pypi.org/project/sections
-
-.. |wheel| image:: https://img.shields.io/pypi/wheel/sections.svg
-    :alt: PyPI Wheel
-    :target: https://pypi.org/project/sections
-
-.. |supported-versions| image:: https://img.shields.io/pypi/pyversions/sections.svg
-    :alt: Supported versions
-    :target: https://pypi.org/project/sections
-
-.. |supported-implementations| image:: https://img.shields.io/pypi/implementation/sections.svg
-    :alt: Supported implementations
-    :target: https://pypi.org/project/sections
-
-.. |commits-since| image:: https://img.shields.io/github/commits-since/trevorpogue/sections/v0.0.0.svg
-    :alt: Commits since latest release
-    :target: https://github.com/trevorpogue/sections/compare/v0.0.0...main
-
-
-.. |scrutinizer| image:: https://scrutinizer-ci.com/g/trevorpogue/sections/badges/quality-score.png?b=main
-    :alt: Scrutinizer Status
-    :target: https://scrutinizer-ci.com/g/trevorpogue/sections/
-
-.. end-badges
-
 Flexible tree data structures for organizing lists and dicts into sections.
 
 ``sections`` is designed to be:
@@ -238,44 +175,46 @@ Section structures can be visualized through the ``Section.deep_str()`` method a
                 [{'Imaginary things'}, 'Hobbits', 'Wizards'],
                 [{'School'}, 'Numbers', 'Forces']],
     )
+    print(library.deep_str())
 
 Output:
 
-.. code-block:: python
+.. code-block::
 
     ###############################################################################
-    <class 'sections.Sections.UniqueSection.<locals>.Section'>: root, parent
-    children            : ['Fantasy', 'Academic']
-    name                : "My Bookshelf"
-    parent              : None
-    topics              : 'All my books'
-    <class 'sections.Sections.UniqueSection.<locals>.Section'>: child, parent
-    children            : ['LOTR', 'Harry Potter']
-    name                : 'Fantasy'
-    parent              : "My Bookshelf"
-    topics              : 'Imaginary things'
-    <class 'sections.Sections.UniqueSection.<locals>.Section'>: child, parent
-    children            : ['Advanced Mathematics', 'Physics for Engineers']
-    name                : 'Academic'
-    parent              : "My Bookshelf"
-    topics              : 'School'
-    <class 'sections.Sections.UniqueSection.<locals>.Section'>: child, leaf
-    name                : 'LOTR'
-    parent              : 'Fantasy'
-    topics              : 'Hobbits'
-    <class 'sections.Sections.UniqueSection.<locals>.Section'>: child, leaf
-    name                : 'Harry Potter'
-    parent              : 'Fantasy'
-    topics              : 'Wizards'
-    <class 'sections.Sections.UniqueSection.<locals>.Section'>: child, leaf
-    name                : 'Advanced Mathematics'
-    parent              : 'Academic'
-    topics              : 'Numbers'
-    <class 'sections.Sections.UniqueSection.<locals>.Section'>: child, leaf
-    name                : 'Physics for Engineers'
-    parent              : 'Academic'
-    topics              : 'Forces'
-    ###############################################################################
+    <class 'Section'> structure
+
+    'My Bookshelf' = <root, parent>
+        parent = None
+        children = ['Fantasy', 'Academic']
+        topics = 'All my books'
+
+    'Fantasy' = <child, parent>
+        parent = 'My Bookshelf'
+        children = ['LOTR', 'Harry Potter']
+        topics = 'Imaginary things'
+
+    'Academic' = <child, parent>
+        parent = 'My Bookshelf'
+        children = ['Advanced Mathematics', 'Physics for Engineers']
+        topics = 'School'
+
+    'LOTR' = <child, leaf>
+        parent = 'Fantasy'
+        topics = 'Hobbits'
+
+    'Harry Potter' = <child, leaf>
+        parent = 'Fantasy'
+        topics = 'Wizards'
+
+    'Advanced Mathematics' = <child, leaf>
+        parent = 'Academic'
+        topics = 'Numbers'
+
+    'Physics for Engineers' = <child, leaf>
+        parent = 'Academic'
+        topics = 'Forces'
+   #    ###############################################################################
 
 See the References_ section of the docs for more printing options.
 
@@ -300,7 +239,7 @@ Each non-leaf Section node keeps a cache containing quickly readable references 
 
 .. code-block:: python
 
-    sect = sections([[[[[42] * 10] * 10] * 10] * 10])
+    sect = sections(*[[[42] * 10] * 10] * 10] * 10])
     sect.use_cache = False              # turn off for just the root node
     sect.cls.use_cache = False          # turn off for all nodes in `sect`
     sections.Section.use_cache = False  # turn off for all structures

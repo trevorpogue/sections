@@ -61,7 +61,7 @@ class Meta(type):
         keyname = self.singular_keyname
         keys = self._parse_keys(args, kwds, keyname)
         for k, v in {**kwds, **keys}.items():
-            self._parse_node_attrs(k, v, node_attrs, children_attrs)
+            _parse_node_attrs(k, v, node_attrs, children_attrs)
         self._fix_key_if_invalid(node_attrs, parent, keyname)
         node_attrs['_keyname'] = keyname
         return node_attrs, children_attrs, keyname
@@ -73,12 +73,12 @@ class Meta(type):
             keyname: str
     ) -> None:
         keys = {}
-        if self._dict_haskey(kwds, keyname):
+        if _dict_haskey(kwds, keyname):
             keys[keyname] = kwds.get(keyname)
-        if (not self._dict_haskey(kwds, keyname)
-                and self._dict_haskey(kwds, self.plural_keyname)):
+        if (not _dict_haskey(kwds, keyname)
+                and _dict_haskey(kwds, self.plural_keyname)):
             keys[keyname] = kwds.get(self.plural_keyname)
-        if not self._dict_haskey(keys, keyname):
+        if not _dict_haskey(keys, keyname):
             keys[keyname] = self._getkeys_from_argskwds(args, kwds)
         return keys
 
@@ -101,21 +101,6 @@ class Meta(type):
         else:
             # otherwise, use the default for the current node
             return self.default_keyvalue
-
-    def _parse_node_attrs(
-            self, name: str, value: Any, node_attrs: SectionAttrs,
-            children_attrs: SectionAttrs
-    ) -> None:
-        """
-        Extract attrs intended for current node from user-provided args/kwds.
-        """
-        if not isinstance(value, list):
-            node_attrs[name] = value
-        else:
-            if len(value) > 0 and isinstance(value[0], set):
-                value = copy(value)
-                node_attrs[name] = value.pop(0).copy().pop()
-            children_attrs[name] = value
 
     def _fix_key_if_invalid(
             self, attrs: SectionAttrs, parent: SectionParent, keyname: str
@@ -178,7 +163,7 @@ class Meta(type):
                 child_attrs[k] = v[child_i]
         key = child_attrs.get(keyname, child_i)
         child_attrs[keyname] = key
-        child = self._get_dictval_i(node, child_i)
+        child = _get_dictval_i(node, child_i)
         if child is None:
             child = node.__class__(parent=node, **child_attrs)
         node[getattr(child, keyname)] = child
@@ -194,7 +179,7 @@ class Meta(type):
         and any pre-constructed Section children passed in self.__call__ args.
         """
         nofchildren_from_attrs = (
-            max(self._len(v) for v in attrs.values()) if attrs else 0)
+            max(_len(v) for v in attrs.values()) if attrs else 0)
         children_from_args = []
         for arg in args:
             from . import Section
@@ -202,24 +187,40 @@ class Meta(type):
                 children_from_args += [arg]
         return (nofchildren_from_attrs, children_from_args)
 
-    ##########################################################################
-    #                              Utilities                                 #
 
-    def _len(self, x: Any) -> int:
-        """Return len of x if it is iterable, else 0."""
-        return max(1, len(x)) if isinstance(x, list) else 0
+def _len(x: Any) -> int:
+    """Return len of x if it is iterable, else 0."""
+    return max(1, len(x)) if isinstance(x, list) else 0
 
-    def _dict_haskey(self, d: AnyDict, key: Any) -> bool:
-        """
-        Return True if dict contains user-provided value for key, else False.
-        """
-        return d.get(key, SectionNone) is not SectionNone
 
-    def _get_dictval_i(self, d: AnyDict, i: int) -> Any:
-        """Get value in iterator position i from dict as if its a list."""
-        ret = None
-        for ii, value in enumerate(d.values()):
-            if ii == i:
-                ret = value
-                break
-        return ret
+def _dict_haskey(d: AnyDict, key: Any) -> bool:
+    """
+    Return True if dict contains user-provided value for key, else False.
+    """
+    return d.get(key, SectionNone) is not SectionNone
+
+
+def _get_dictval_i(d: AnyDict, i: int) -> Any:
+    """Get value in iterator position i from dict as if its a list."""
+    ret = None
+    for ii, value in enumerate(d.values()):
+        if ii == i:
+            ret = value
+            break
+    return ret
+
+
+def _parse_node_attrs(
+        name: str, value: Any, node_attrs: SectionAttrs,
+        children_attrs: SectionAttrs
+) -> None:
+    """
+    Extract attrs intended for current node from user-provided args/kwds.
+    """
+    if not isinstance(value, list):
+        node_attrs[name] = value
+    else:
+        if len(value) > 0 and isinstance(value[0], set):
+            value = copy(value)
+            node_attrs[name] = value.pop(0).copy().pop()
+        children_attrs[name] = value

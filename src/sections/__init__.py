@@ -17,12 +17,12 @@ from .types import SectionKeysOrObjects
 from .types import SectionNone
 
 
-class Sections:
+class Module:
 
     """Class form of sections module to make the module callable."""
 
     @property
-    def UniqueSection(self) -> Type[Section]:
+    def Section_factory(self) -> Type[Section]:
         """
         Return a unique class that inherits Section but can have its own
         unique properties and methods defined based on args/kwds, but will not
@@ -44,10 +44,10 @@ class Sections:
         instance type. And each structure returned will contain nodes with
         types of a different unique class instance than other structures.
         """
-        return self.UniqueSection(*args, **kwds)
+        return self.Section_factory(*args, **kwds)
 
 
-sections = Sections()
+sections = Module()
 
 sys.modules['sections'] = sections  # make the module callable
 
