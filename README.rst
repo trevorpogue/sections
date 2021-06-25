@@ -6,14 +6,11 @@
 .. list-table::
     :stub-columns: 1
 
-    * - docs
-      - |docs|
     * - tests
-      - | |travis| |appveyor| |requires|
-        | |coveralls| |codecov|
-        | |scrutinizer| |codacy| |codeclimate|
+        | |coveralls| |codeclimate| |scrutinizer|
+      - | |travis| |requires|
     * - package
-      - | |version| |wheel| |supported-versions|
+      - | |version| |supported-versions| |wheel|
         | |supported-implementations| |commits-since|
 .. |docs| image:: https://readthedocs.org/projects/sections/badge/?style=flat
     :alt: Documentation Status

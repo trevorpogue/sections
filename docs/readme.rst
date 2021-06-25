@@ -6,26 +6,15 @@
 .. list-table::
     :stub-columns: 1
 
-    * - docs
-      - |docs|
     * - tests
-        | |coveralls| |codacy| |codeclimate|
-        | |codecov| |scrutinizer|
-      - | |travis| |appveyor| |requires|
+        | |coveralls| |codeclimate| |scrutinizer|
+      - | |travis| |requires|
     * - package
       - | |version| |supported-versions| |wheel|
         | |supported-implementations| |commits-since|
-.. |docs| image:: https://readthedocs.org/projects/sections/badge/?style=flat
-    :alt: Documentation Status
-    :target: https://sections.readthedocs.io/
-
 .. |travis| image:: https://api.travis-ci.com/trevorpogue/sections.svg?branch=main
     :alt: Travis-CI Build Status
     :target: https://travis-ci.com/github/trevorpogue/sections
-
-.. |appveyor| image:: https://ci.appveyor.com/api/projects/status/github/trevorpogue/sections?branch=main&svg=true
-    :alt: AppVeyor Build Status
-    :target: https://ci.appveyor.com/project/trevorpogue/sections
 
 .. |requires| image:: https://requires.io/github/trevorpogue/sections/requirements.svg?branch=main
     :alt: Requirements Status
