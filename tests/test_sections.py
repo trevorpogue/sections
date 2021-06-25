@@ -89,11 +89,6 @@ def test_misc2() -> None:
     menu = get_basic_menu()
     assert menu('names') == ['Breakfast', 'Dinner']
     assert menu('mains') == ['Bacon&Eggs', 'Burger']
-    # test Sections.__iter__
-    menu = get_basic_menu()
-    names = menu.names
-    for section, name in zip(menu, names):
-        assert section.name == name
     # test uneven attrs
     menu = sections(
         'Breakfast', 'Dinner',
@@ -147,18 +142,10 @@ def test_misc_overrides() -> None:
     assert s0 != s1
     assert s0 == s0
     assert s0.x == [0, 1]
-    s0.pop(0)
-    assert s0.x == 1
-    with pytest.raises(NotImplementedError):
-        s0.setdefault(1, 1)
-    s0 = sections(x=[0, 1])
-    s0.popitem()
     d = {s0: 0}
     for k in d:
         assert k is s0
-        # assert repr(k) == "'section'"
         assert str(k) == 'section'
-    assert s0.x == 0
 
 
 def test_SectionNoneType() -> None:

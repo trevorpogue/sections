@@ -42,7 +42,7 @@ class Meta(type):
         node_attrs, children_attrs, keyname = self._parse_attrs(
             args, kwds, parent)
         node = self._construct_node(parent, node_attrs)
-        self._construct_children(node, args, children_attrs, keyname)
+        _construct_children(node, args, children_attrs, keyname)
         return node
 
     def _parse_attrs(
@@ -135,23 +135,23 @@ class Meta(type):
             setattr(node.__class__, k, v)
         return node
 
-    def _construct_children(
-        self,
-        node: SectionType,
-        args: SectionKeysOrObjects,
-        children_attrs: SectionAttrs,
-        keyname: str
-    ) -> None:
-        """
-        Recursively repeat construction per child with extracted child attrs.
-        """
-        nofchildren_from_attrs, children_from_args = (
-            _get_children_data(node, args, children_attrs)
-        )
-        for child in children_from_args:
-            node[getattr(child, keyname)] = child
-        for child_i in range(nofchildren_from_attrs):
-            _contruct_child(child_i, children_attrs, node, keyname)
+
+def _construct_children(
+    node: SectionType,
+    args: SectionKeysOrObjects,
+    children_attrs: SectionAttrs,
+    keyname: str
+) -> None:
+    """
+    Recursively repeat construction per child with extracted child attrs.
+    """
+    nofchildren_from_attrs, children_from_args = (
+        _get_children_data(node, args, children_attrs)
+    )
+    for child in children_from_args:
+        node[getattr(child, keyname)] = child
+    for child_i in range(nofchildren_from_attrs):
+        _contruct_child(child_i, children_attrs, node, keyname)
 
 
 def _get_children_data(
@@ -177,6 +177,7 @@ def _contruct_child(
         child_i: int, children_attrs: SectionAttrs,
         node: SectionType, keyname: str
 ) -> None:
+    """Parse attr[i] from each attr and give to child."""
     child_attrs = {}
     for k, v in children_attrs.items():
         if len(v) > child_i:

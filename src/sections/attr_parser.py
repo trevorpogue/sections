@@ -81,7 +81,7 @@ class AttrParser:
         """
         Default method called by :meth:`__call__ <Section.__call__>`. See
         the docstring of :meth:`__call__ <Section.__call__>` for the full
-        details of what this method does :meta private:.
+        details of what this method does.
         """
         attrs = self._get_nearest_attr(name)
         return self._parse_top_getattr(name, attrs, gettype=gettype)

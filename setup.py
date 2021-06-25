@@ -76,14 +76,11 @@ setup(
     python_requires='>=3.6',
     install_requires=[
         # eg: 'aspectlib==1.1.1', 'six>=1.7',
-        # 'debug>=0.0.0',
-        # 'utils>=0.0.0',
         'pluralizer>=0.0.0'
     ],
     extras_require={
         # eg:
         #   'rst': ['docutils>=0.11'],
         #   ':python_version=="2.6"': ['argparse'],
-        # ':python_version>="3.6"': ['pluralizer'],
     },
 )

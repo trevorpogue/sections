@@ -91,30 +91,29 @@ class Section(Node, Dict, AttrParser, StringParser, dict,
         each child into a list. Else, raise AttributeError.
 
         For argument `gettype`, Setting to `'default'` uses the value of
-        self.default_gettype for gettype. Setting to `'hybrid'` returns a list
-        if more than 1 element is found, else returns the non-iterable raw form
-        of the element. Setting to `list` returns a list containing the
-        attribute values. Setting to `iter` returns an iterable iterating
-        through the attribute values. Setting to `dict` returns a dict
-        containing pairs of the containing node's name with the attribute
-        value. Setting to `'full_dict'` is faster than `dict` and returns a
-        dict containing pairs of a reference to each node and its attribute
-        value. `'full_dict'` output is visually identical to `dict` for
-        printing purposes, but it will contain all attributes even if some
-        source nodes have duplicate names. The only downside to `'full_dict'`
-        that the keys cannot be referenced by name like with `dict`, but all
-        values() are still valid.
+        self.default_gettype for gettype (its default is 'hybrid'). Setting to
+        `'hybrid'` returns a list if more than 1 element is found, else returns
+        the non-iterable raw form of the element. Setting to `list` returns a
+        list containing the attribute values. Setting to `iter` returns an
+        iterable iterating through the attribute values. Setting to `dict`
+        returns a dict containing pairs of the containing node's name with the
+        attribute value. Setting to `'full_dict'` is faster than `dict` and
+        returns a dict containing pairs of a reference to each node and its
+        attribute value. `'full_dict'` output is visually identical to `dict`
+        for printing purposes except that it will contain all attributes even
+        if some source nodes have duplicate names. The only downside to
+        `'full_dict'` is that the keys cannot be referenced by name like with
+        `dict`, but all values() are still valid.
 
         :param name: The name of the attribute to find in self or self's
-                     descendants
+                     descendants.
 
         :param gettype: Valid values are `'default'`, `'hybrid'` `list`,
                         `iter`, `dict`, `'full_dict'`. See method's description
                         body above for explanation of what each value does.
 
-        :return: The attribute `name` of self if present, else an iterable
-                 object containing the attribute `name` formed from the nearest
-                 relatives of self. The type of the iterable object depends
-                 on `gettype`.
+        :return: An iterable or non-iterable form of the attribute `name`
+                 formed from self or descendant nodes. Depends on the value
+                 given to `gettype`.
         """
         return self.get_nearest_attr(name, gettype=gettype)

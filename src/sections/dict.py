@@ -40,6 +40,30 @@ class Dict:
         self._invalidate_caches()
         super().update(*args, **kwds)
 
+    def items(self) -> Tuple[Iterable[Any], Iterable[Any]]:
+        """Return iterator over child names and children."""
+        return super().items()
+
+    def keys(self) -> Iterable[Any]:
+        """Return iterator over child names."""
+        return super().keys()
+
+    def values(self) -> Iterable[Any]:
+        """Return iterator over chilren."""
+        return super().values()
+
+    def clear(self) -> None:
+        """Not supported yet. :meta private:."""
+        raise NotImplementedError(
+            'Section.clear() is not yet implemented.'
+        )
+
+    def copy(self) -> None:
+        """Not supported yet. :meta private:."""
+        raise NotImplementedError(
+            'Section.copy() is not yet implemented.'
+        )
+
     def setdefault(self, *args: Any, **kwds: Any) -> Any:
         """Not supported yet. :meta private:."""
         raise NotImplementedError(

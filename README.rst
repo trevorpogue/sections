@@ -1,15 +1,13 @@
+.. start-badges
+
 [ s e | c t | i o | n s ]
 ==============================
 
-.. start-badges
-
-|coveralls| |codacy| |codeclimate|
+|coveralls| |codacy| |codeclimate| |requires|
 
 |version| |supported-versions| |supported-implementations| |wheel|
 
-|requires| |commits-since| |docs|
-
-|downloads| |downloads-week|
+|docs| |commits-since| |downloads-week| |downloads|
 
 .. |coveralls| image:: https://coveralls.io/repos/github/trevorpogue/sections/badge.svg
     :alt: Coverage Status
@@ -67,11 +65,11 @@ Flexible tree data structures for organizing lists and dicts into sections.
 
 * **Intuitive**: Start quickly and spend less time reading the docs.
 * **Scalable**: Grow arbitrarily complex trees as your problem scales.
-* **Flexible**: Rapidly build nodes with any custom attributes, properties, and methods on the fly.
-* **Fast**: Made with performance in mind - access lists and sub-lists/dicts in as little as Θ(1) time in many cases. See the Performance section for the full details.
+* **Flexible**: Rapidly build nodes with custom attributes, properties, and methods on the fly.
+* **Fast**: Made with performance in mind - access lists and sub-lists/dicts in Θ(1) time in many cases. See the Performance section for the full details.
 * **Reliable**: Contains an exhaustive test suite and 100\% code coverage.
 
-See the full documentation at: https://sections.readthedocs.io/
+See the full documentation at https://sections.readthedocs.io/. In addition to a repeat of this readme page, the docs also contain some other useful sections, in particular a References_ section, which more thoroughly documents all the interfacing methods for Section objects.
 
 =========================
 Usage
@@ -119,7 +117,7 @@ Spend less time deciding between using the singular or plural form for an attrib
     assert tasks['pay bill'].status == 'completed'
     assert tasks['clean'].status == 'started'
 
-If you don't like this feature, simply turn it off as shown in the **Detail - Attribute access settings** section.
+If you don't like this feature, simply turn it off as shown in the **Details - Attribute access settings** section.
 
 --------------------------------------------------------------------
 Properties: Easily add on the fly
@@ -138,7 +136,7 @@ Properties and methods are automatically added to all nodes in a structure retur
     assert schedule['Weekend'].hours == 10
     assert schedule.hours == 50
 
-Each call returns a structure containing nodes of a unique class created in a class factory function, where the unique class definition contains no logic except that it inherits from the Section class. This allows properties/methods added to one structure's class definition to not affect the class definitions of nodes from other structures.
+Adding properties and methods this way doesn't affect the class definitions of Sections/nodes from other structures. See the **Detail - Properties/methods** section for how this works.
 
 --------------------------------------------------------------------
 Construction: Build gradually or all at once
@@ -214,7 +212,7 @@ The non-keyword arguments passed into a ``sections()`` call define the section n
     assert books['LOTR'].name == 'LOTR'
     assert books['Harry Potter'].name == 'Harry Potter'
 
-Names are optional, and by default, children will be given integer values corresponding to indices in an array, while a root has a default keyvalue of ``sections.SectionNone``:
+Names are optional, and by default, children names will be assigned as integer values corresponding to indices in an array, while a root has a default keyvalue of ``sections.SectionNone``:
 
 .. code-block:: python
 
@@ -256,7 +254,7 @@ A parent section name can optionally be provided as the first argument in a list
 Return attributes as a list, dict, or iterable
 -----------------------------------------------
 
-Access the data in different forms with the ``gettype`` argument in ``Section.__call__()`` as follows:
+Access the data in different forms with the ``gettype`` argument in `Section.__call__()`_ as follows:
 
 .. code-block:: python
 
@@ -276,7 +274,7 @@ Access the data in different forms with the ``gettype`` argument in ``Section.__
     for i, value in enumerate(menu['Breakfast']('side', iter)):
         assert value == ['HashBrown'][i]
 
-See the ``Section.__call__()`` method in the References_ section of the docs for more options.
+See the `Section.__call__()`_ method in the References section of the docs for more options.
 
 Set the default return type when accessing structure attributes by changing ``Section.default_gettype`` as follows:
 
@@ -298,20 +296,11 @@ Set the default return type when accessing structure attributes by changing ``Se
     assert tasks1('statuses') == {'pay bill': 'completed', 'clean': 'started'}
     assert tasks2('statuses') == {'pay bill': 'completed', 'clean': 'started'}
 
-The above will also work for accessing attributes in the form ``object.attr`` but only if the node does not contain the attribute ``attr``, otherwise it will return the non-iterable raw value for ``attr``. Therefore, for consistency, access attributes using ``Section.__call__()`` like above if you wish **always receive an iterable** form of the attributes.
+The above will also work for accessing attributes in the form ``object.attr`` but only if the node does not contain the attribute ``attr``, otherwise it will return the non-iterable raw value for ``attr``. Therefore, for consistency, access attributes using `Section.__call__()`_ like above if you wish to **always receive an iterable** form of the attributes.
 
 ----------------------------------------------------------------
 Attribute access settings
 ----------------------------------------------------------------
-
-Recap: spend less time deciding between using the singular or plural form for an attribute name:
-
-.. code-block:: python
-
-    tasks = sections('pay bill', 'clean', status=['completed', 'started'])
-    assert tasks.statuses == ['completed', 'started']
-    assert tasks['pay bill'].status == 'completed'
-    assert tasks['clean'].status == 'started'
 
 When an attribute is not found in a Section node, both the plural and singular forms of the word are then checked to see if the node contains the attribute under those forms of the word. If they are still not found, the node will recursively repeat the same search on each of its children, concatenating the results into a list or dict. The true attribute name in each node supplied a corresponding value is whatever name was given in the keyword argument's key (i.e. ``status`` in the above example).
 
@@ -331,11 +320,17 @@ Note, however, that this will still traverse descendant nodes to see if they
 contain the requested attribute. To stop using this feature also, access
 attributes using the `Section.get_node_attr()`_ method instead.
 
+----------------------------------------------------------------
+Properties/methods
+----------------------------------------------------------------
+
+Each call returns a structure containing nodes of a unique class created in a class factory function, where the unique class definition contains no logic except that it inherits from the Section class. This allows properties/methods added to one structure's class definition to not affect the class definitions of nodes from other structures.
+
 --------------
 Printing
 --------------
 
-Section structures can be visualized through the ``Section.deep_str()`` method as follows:
+Section structures can be visualized through the `Section.deep_str()`_ method as follows:
 
 
 .. code-block:: python
@@ -400,23 +395,31 @@ Inheriting Section is easy, the only requirement is to call ``super().__init__(*
 .. code-block:: python
 
     class Library(sections.Section):
+        """My library class."""
         def __init__(price="Custom default value", **kwds):
+            """Pass **kwds to super."""
             super().__init__(**kwds)
 
         @property
         def genres(self):
+            """A synonym for sections."""
             if self.isroot:
                 return self.sections
             else:
                 raise AttributeError('This library has only 1 level of genres')
 
         @property
-        def books(self): return self.leaves
+        def books(self):
+            """A synonym for leaves."""
+            return self.leaves
 
         @property
-        def titles(self): return self.names
+        def titles(self):
+            """A synonym for names."""
+            return self.names
 
         def critique(self, impression="Haven't read it yet", rating=0):
+            """Set the book price based on the impression."""
             self.review = impression
             self.price = rating * 2
 
@@ -443,9 +446,9 @@ Inheriting Section is easy, the only requirement is to call ``super().__init__(*
 Performance
 --------------
 
-Each non-leaf Section node keeps a cache containing quickly readable references of attribute dicts previously parsed from manual traversing through descendant nodes in an earlier read. The caches are invalidated accordingly for modified nodes and their ancestors when the tree structure or node attribute values change.
+Each non-leaf Section node keeps a cache containing quickly readable references to attribute dicts previously parsed from manually traversing through descendant nodes in an earlier read. The caches are invalidated accordingly for modified nodes and their ancestors when the tree structure or node attribute values change.
 
-The caches allow instant reading of sub-lists/dicts in Θ(1) time and can often make structure attribute reading faster by 5x or even much more once the structure is rarely being modified. The downside is that it also increases memory usage by roughly 5x as well. This is not a concern on a general-purpose computer for structures representing lists/dicts with less than 1000 - 10,000 elements. However, for structures in this range or larger, it is recommended to consider changing the node or structure's class attribute ``use_cache`` to ``False``. This can be done as follows:
+The caches allow instant reading of sub-lists/dicts in Θ(1) time and can often make structure attribute reading faster by 5x, or even much more when the structure is rarely being modified. The downside is that it also increases memory usage by roughly 5x as well. This is not a concern on a general-purpose computer for structures representing lists/dicts with less than 1000 - 10,000 elements. However, for structures in this range or larger, it is recommended to consider changing the node or structure's class attribute ``use_cache`` to ``False``. This can be done as follows:
 
 .. code-block:: python
 
@@ -454,7 +457,7 @@ The caches allow instant reading of sub-lists/dicts in Θ(1) time and can often 
     sect.cls.use_cache = False          # turn off for all nodes in `sect`
     sections.Section.use_cache = False  # turn off for all structures
 
-The dict option for ``gettype`` in the ``Section.__call__()`` method is
+The dict option for ``gettype`` in the `Section.__call__()`_ method is
 currently slower than the other options. For performance-critical uses, use the
 other options for ``gettype``.
 Alternatively, if a dict is required just for
@@ -462,7 +465,9 @@ visual printing purposes, use the faster ``'full_dict'`` option for ``gettype``
 instead. This option returns dicts with valid values with keys that have string
 representations of the node names, but the keys are in reality references to
 node objects and cannot be referenced by the user through strings.
-See the ``Section.__call__()`` method in the References_ section of the docs for more details on the ``gettype`` options.
+See the `Section.__call__()`_ method in the References section of the docs for more details on the ``gettype`` options.
 
 .. _References: https://sections.readthedocs.io/en/latest/reference/index.html
 .. _Section.get_node_attr(): https://sections.readthedocs.io/en/latest/reference/#sections.Section.get_node_attr
+.. _Section.__call__(): https://sections.readthedocs.io/en/latest/reference/#sections.Section.__call__
+.. _Section.deep_str(): https://sections.readthedocs.io/en/latest/reference/#sections.Section.deep_str

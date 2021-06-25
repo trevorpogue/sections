@@ -1,3 +1,5 @@
+.. start-badges
+
 [ s e | c t | i o | n s ]
 ==============================
 
@@ -5,20 +7,7 @@
 
 |version| |supported-versions| |supported-implementations| |wheel|
 
-|docs| |commits-since| |downloads| |downloads-week|
-
-Flexible tree data structures for organizing lists and dicts into sections.
-
-``sections`` is designed to be:
-
-* **Intuitive**: Start quickly and spend less time reading the docs.
-* **Scalable**: Grow arbitrarily complex trees as your problem scales.
-* **Flexible**: Rapidly build nodes with any custom attributes, properties, and methods on the fly.
-* **Fast**: Made with performance in mind - access lists and sub-lists/dicts in as little as Θ(1) time in many cases. See the Performance section for the full details.
-* **Reliable**: Contains an exhaustive test suite and 100\% code coverage.
-
-See the GitHub page at: https://github.com/trevorpogue/sections
-
+|docs| |commits-since| |downloads-week| |downloads|
 
 .. |coveralls| image:: https://coveralls.io/repos/github/trevorpogue/sections/badge.svg
     :alt: Coverage Status
@@ -68,6 +57,19 @@ See the GitHub page at: https://github.com/trevorpogue/sections
     :alt: Commits since latest release
     :target: https://github.com/trevorpogue/sections/compare/v0.0.0...main
 
+.. end-badges
+
+Flexible tree data structures for organizing lists and dicts into sections.
+
+``sections`` is designed to be:
+
+* **Intuitive**: Start quickly and spend less time reading the docs.
+* **Scalable**: Grow arbitrarily complex trees as your problem scales.
+* **Flexible**: Rapidly build nodes with custom attributes, properties, and methods on the fly.
+* **Fast**: Made with performance in mind - access lists and sub-lists/dicts in Θ(1) time in many cases. See the Performance section for the full details.
+* **Reliable**: Contains an exhaustive test suite and 100\% code coverage.
+
+See the GitHub page at https://github.com/trevorpogue/sections. See also the References_ section of these docs for more thorough documentation of all the interfacing methods for Section objects.
 
 =========================
 Usage
@@ -94,7 +96,7 @@ Spend less time deciding between using the singular or plural form for an attrib
                     :end-before: sphinx-end-plural-singular
                     :dedent: 4
 
-If you don't like this feature, simply turn it off as shown in the **Detail - Attribute access settings** section.
+If you don't like this feature, simply turn it off as shown in the **Details - Attribute access settings** section.
 
 --------------------------------------------------------------------
 Properties: Easily add on the fly
@@ -107,7 +109,7 @@ Properties and methods are automatically added to all nodes in a structure retur
                     :end-before: sphinx-end-properties
                     :dedent: 4
 
-Each call returns a structure containing nodes of a unique class created in a class factory function, where the unique class definition contains no logic except that it inherits from the Section class. This allows properties/methods added to one structure's class definition to not affect the class definitions of nodes from other structures.
+Adding properties and methods this way doesn't affect the class definitions of Sections/nodes from other structures. See the **Detail - Properties/methods** section for how this works.
 
 --------------------------------------------------------------------
 Construction: Build gradually or all at once
@@ -135,7 +137,7 @@ The non-keyword arguments passed into a ``sections()`` call define the section n
                     :end-before: sphinx-end-names
                     :dedent: 4
 
-Names are optional, and by default, children will be given integer values corresponding to indices in an array, while a root has a default keyvalue of ``sections.SectionNone``:
+Names are optional, and by default, children names will be assigned as integer values corresponding to indices in an array, while a root has a default keyvalue of ``sections.SectionNone``:
 
 .. literalinclude:: ../tests/test_doc_examples.py
                     :start-after: sphinx-start-names-printing
@@ -157,7 +159,7 @@ A parent section name can optionally be provided as the first argument in a list
 Return attributes as a list, dict, or iterable
 -----------------------------------------------
 
-Access the data in different forms with the ``gettype`` argument in ``Section.__call__()`` as follows:
+Access the data in different forms with the ``gettype`` argument in `Section.__call__()`_ as follows:
 
 .. code-block:: python
 
@@ -177,7 +179,7 @@ Access the data in different forms with the ``gettype`` argument in ``Section.__
     for i, value in enumerate(menu['Breakfast']('side', iter)):
         assert value == ['HashBrown'][i]
 
-See the ``Section.__call__()`` method in the References_ section of the docs for more options.
+See the `Section.__call__()`_ method in the References section of the docs for more options.
 
 Set the default return type when accessing structure attributes by changing ``Section.default_gettype`` as follows:
 
@@ -186,7 +188,7 @@ Set the default return type when accessing structure attributes by changing ``Se
                     :end-before: sphinx-end-gettype
                     :dedent: 4
 
-The above will also work for accessing attributes in the form ``object.attr`` but only if the node does not contain the attribute ``attr``, otherwise it will return the non-iterable raw value for ``attr``. Therefore, for consistency, access attributes using ``Section.__call__()`` like above if you wish to **always receive an iterable** form of the attributes.
+The above will also work for accessing attributes in the form ``object.attr`` but only if the node does not contain the attribute ``attr``, otherwise it will return the non-iterable raw value for ``attr``. Therefore, for consistency, access attributes using `Section.__call__()`_ like above if you wish to **always receive an iterable** form of the attributes.
 
 ----------------------------------------------------------------
 Attribute access settings
@@ -205,11 +207,17 @@ Note, however, that this will still traverse descendant nodes to see if they
 contain the requested attribute. To stop using this feature also, access
 attributes using the `Section.get_node_attr()`_ method instead.
 
+----------------------------------------------------------------
+Properties/methods
+----------------------------------------------------------------
+
+Each call returns a structure containing nodes of a unique class created in a class factory function, where the unique class definition contains no logic except that it inherits from the Section class. This allows properties/methods added to one structure's class definition to not affect the class definitions of nodes from other structures.
+
 --------------
 Printing
 --------------
 
-Section structures can be visualized through the ``Section.deep_str()`` method as follows:
+Section structures can be visualized through the `Section.deep_str()`_ method as follows:
 
 
 .. code-block:: python
@@ -282,9 +290,9 @@ Inheriting Section is easy, the only requirement is to call ``super().__init__(*
 Performance
 --------------
 
-Each non-leaf Section node keeps a cache containing quickly readable references of attribute dicts previously parsed from manual traversing through descendant nodes in an earlier read. The caches are invalidated accordingly for modified nodes and their ancestors when the tree structure or node attribute values change.
+Each non-leaf Section node keeps a cache containing quickly readable references to attribute dicts previously parsed from manually traversing through descendant nodes in an earlier read. The caches are invalidated accordingly for modified nodes and their ancestors when the tree structure or node attribute values change.
 
-The caches allow instant reading of sub-lists/dicts in Θ(1) time and can often make structure attribute reading faster by 5x or even much more once the structure is rarely being modified. The downside is that it also increases memory usage by roughly 5x as well. This is not a concern on a general-purpose computer for structures representing lists/dicts with less than 1000 - 10,000 elements. However, for structures in this range or larger, it is recommended to consider changing the node or structure's class attribute ``use_cache`` to ``False``. This can be done as follows:
+The caches allow instant reading of sub-lists/dicts in Θ(1) time and can often make structure attribute reading faster by 5x, or even much more when the structure is rarely being modified. The downside is that it also increases memory usage by roughly 5x as well. This is not a concern on a general-purpose computer for structures representing lists/dicts with less than 1000 - 10,000 elements. However, for structures in this range or larger, it is recommended to consider changing the node or structure's class attribute ``use_cache`` to ``False``. This can be done as follows:
 
 .. code-block:: python
 
@@ -293,7 +301,7 @@ The caches allow instant reading of sub-lists/dicts in Θ(1) time and can often 
     sect.cls.use_cache = False          # turn off for all nodes in `sect`
     sections.Section.use_cache = False  # turn off for all structures
 
-The dict option for ``gettype`` in the ``Section.__call__()`` method is
+The dict option for ``gettype`` in the `Section.__call__()`_ method is
 currently slower than the other options. For performance-critical uses, use the
 other options for ``gettype``.
 Alternatively, if a dict is required just for
@@ -301,7 +309,9 @@ visual printing purposes, use the faster ``'full_dict'`` option for ``gettype``
 instead. This option returns dicts with valid values with keys that have string
 representations of the node names, but the keys are in reality references to
 node objects and cannot be referenced by the user through strings.
-See the ``Section.__call__()`` method in the References_ section of the docs for more details on the ``gettype`` options.
+See the `Section.__call__()`_ method in the References section of the docs for more details on the ``gettype`` options.
 
 .. _References: https://sections.readthedocs.io/en/latest/reference/index.html
 .. _Section.get_node_attr(): https://sections.readthedocs.io/en/latest/reference/#sections.Section.get_node_attr
+.. _Section.__call__(): https://sections.readthedocs.io/en/latest/reference/#sections.Section.__call__
+.. _Section.deep_str(): https://sections.readthedocs.io/en/latest/reference/#sections.Section.deep_str
