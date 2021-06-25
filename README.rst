@@ -7,8 +7,9 @@
     :stub-columns: 1
 
     * - tests
-        | |coveralls| |codeclimate| |scrutinizer|
-      - | |travis| |requires|
+      - | |coveralls|
+        | |scrutinizer| |codeclimate|
+        | |requires| |travis|
     * - package
       - | |version| |supported-versions| |wheel|
         | |supported-implementations| |commits-since|
