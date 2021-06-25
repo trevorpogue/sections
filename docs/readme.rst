@@ -1,6 +1,12 @@
 [ s e | c t | i o | n s ]
 ==============================
 
+|coveralls| |codacy| |codeclimate| |requires|
+
+|version| |supported-versions| |supported-implementations| |wheel|
+
+|docs| |commits-since| |downloads| |downloads-week|
+
 Flexible tree data structures for organizing lists and dicts into sections.
 
 ``sections`` is designed to be:
@@ -12,6 +18,56 @@ Flexible tree data structures for organizing lists and dicts into sections.
 * **Reliable**: Contains an exhaustive test suite and 100\% code coverage.
 
 See the GitHub page at: https://github.com/trevorpogue/sections
+
+
+.. |coveralls| image:: https://coveralls.io/repos/github/trevorpogue/sections/badge.svg
+    :alt: Coverage Status
+    :target: https://coveralls.io/github/trevorpogue/sections
+
+.. |codacy| image:: https://app.codacy.com/project/badge/Grade/92804e7a0df44f09b42bc6ee1664bc67
+    :alt: Codacy Code Quality Status
+    :target: https://www.codacy.com/gh/trevorpogue/sections/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=trevorpogue/sections&amp;utm_campaign=Badge_Grade
+
+.. |codeclimate| image:: https://codeclimate.com/github/trevorpogue/sections/badges/gpa.svg
+   :alt: CodeClimate Quality Status
+   :target: https://codeclimate.com/github/trevorpogue/sections
+
+.. |version| image:: https://img.shields.io/pypi/v/sections.svg
+    :alt: PyPI Package latest release
+    :target: https://pypi.org/project/sections
+
+.. |supported-versions| image:: https://img.shields.io/pypi/pyversions/sections.svg
+    :alt: Supported versions
+    :target: https://pypi.org/project/sections
+
+.. |supported-implementations| image:: https://img.shields.io/pypi/implementation/sections.svg
+    :alt: Supported implementations
+    :target: https://pypi.org/project/sections
+
+.. |wheel| image:: https://img.shields.io/pypi/wheel/sections.svg
+    :alt: PyPI Wheel
+    :target: https://pypi.org/project/sections
+
+.. |downloads| image:: https://pepy.tech/badge/sections
+    :alt: downloads
+    :target: https://pepy.tech/project/sections
+
+.. |downloads-week| image:: https://pepy.tech/badge/sections/week
+    :alt: downloads
+    :target: https://pepy.tech/project/sections
+
+.. |docs| image:: https://readthedocs.org/projects/sections/badge/?style=flat
+    :alt: Documentation Status
+    :target: https://sections.readthedocs.io/
+
+.. |requires| image:: https://requires.io/github/trevorpogue/sections/requirements.svg?branch=main
+    :alt: Requirements Status
+    :target: https://requires.io/github/trevorpogue/sections/requirements/?branch=main
+
+.. |commits-since| image:: https://img.shields.io/github/commits-since/trevorpogue/sections/v0.0.0.svg
+    :alt: Commits since latest release
+    :target: https://github.com/trevorpogue/sections/compare/v0.0.0...main
+
 
 =========================
 Usage
@@ -38,7 +94,7 @@ Spend less time deciding between using the singular or plural form for an attrib
                     :end-before: sphinx-end-plural-singular
                     :dedent: 4
 
-If you don't like this feature, simply turn it off as shown in the **Detail - Attribute access** section.
+If you don't like this feature, simply turn it off as shown in the **Detail - Attribute access settings** section.
 
 --------------------------------------------------------------------
 Properties: Easily add on the fly
@@ -67,30 +123,6 @@ Construct section-by-section, section-wise, attribute-wise, or other ways:
 =============
 Details
 =============
-
-----------------------------------------------------------------
-Attribute access
-----------------------------------------------------------------
-
-Recap: spend less time deciding between using the singular or plural form for an attribute name:
-
-.. literalinclude:: ../tests/test_doc_examples.py
-                    :start-after: sphinx-start-plural-singular
-                    :end-before: sphinx-end-plural-singular
-                    :dedent: 4
-
-When an attribute is not found in a Section node, both the plural and singular forms of the word are then checked to see if the node contains the attribute under those forms of the word. If they are still not found, the node will recursively repeat the same search on each of its children, concatenating the results into a list or dict. The true attribute name in each node supplied a corresponding value is whatever name was given in the keyword argument's key (i.e. ``status`` in the above example).
-
-If you don't like this feature, simply turn it off using the following:
-
-.. literalinclude:: ../tests/test_doc_examples.py
-                    :start-after: sphinx-start-plural-singular-disable
-                    :end-before: sphinx-end-plural-singular-disable
-                    :dedent: 4
-
-Note, however, that this will still traverse descendant nodes to see if they
-contain the requested attribute. To stop using this feature also, access
-attributes using the `Section.get_node_attr()`_ method instead.
 
 --------------
 Section names
@@ -149,14 +181,29 @@ See the ``Section.__call__()`` method in the References_ section of the docs for
 
 Set the default return type when accessing structure attributes by changing ``Section.default_gettype`` as follows:
 
-.. code-block:: python
-
 .. literalinclude:: ../tests/test_doc_examples.py
                     :start-after: sphinx-start-gettype
                     :end-before: sphinx-end-gettype
                     :dedent: 4
 
 The above will also work for accessing attributes in the form ``object.attr`` but only if the node does not contain the attribute ``attr``, otherwise it will return the non-iterable raw value for ``attr``. Therefore, for consistency, access attributes using ``Section.__call__()`` like above if you wish to **always receive an iterable** form of the attributes.
+
+----------------------------------------------------------------
+Attribute access settings
+----------------------------------------------------------------
+
+When an attribute is not found in a Section node, both the plural and singular forms of the word are then checked to see if the node contains the attribute under those forms of the word. If they are still not found, the node will recursively repeat the same search on each of its children, concatenating the results into a list or dict. The true attribute name in each node supplied a corresponding value is whatever name was given in the keyword argument's key (i.e. ``status`` in the example below).
+
+If you don't like this feature, simply turn it off using the following:
+
+.. literalinclude:: ../tests/test_doc_examples.py
+                    :start-after: sphinx-start-plural-singular-disable
+                    :end-before: sphinx-end-plural-singular-disable
+                    :dedent: 4
+
+Note, however, that this will still traverse descendant nodes to see if they
+contain the requested attribute. To stop using this feature also, access
+attributes using the `Section.get_node_attr()`_ method instead.
 
 --------------
 Printing
@@ -214,7 +261,7 @@ Output:
     'Physics for Engineers' = <child, leaf>
         parent = 'Academic'
         topics = 'Forces'
-   #    ###############################################################################
+    ###############################################################################
 
 See the References_ section of the docs for more printing options.
 
@@ -235,7 +282,9 @@ Inheriting Section is easy, the only requirement is to call ``super().__init__(*
 Performance
 --------------
 
-Each non-leaf Section node keeps a cache containing quickly readable references of attribute dicts previously parsed from manual traversing through descendant nodes in an earlier read. The caches are invalidated accordingly for modified nodes and their ancestors when the tree structure or node attribute values change. The caches allow instant reading of sub-lists/dicts in Θ(1) time and can often make structure attribute reading faster by 5x or even much more if the structure is rarely modified after creation. The downside is that it also increases memory usage by roughly 5x as well. This is not a concern on a general-purpose computer for structures containing less than 1000 - 10,000 nodes. For clarity, converting a list with 10,000 elements would create 10,001 nodes (1 root plus 10,000 children). However, for structure containing more than 1000 - 10,000 nodes, it may be recommended to consider changing the node or structure's class attribute ``use_cache`` to ``False``. This can be done as follows:
+Each non-leaf Section node keeps a cache containing quickly readable references of attribute dicts previously parsed from manual traversing through descendant nodes in an earlier read. The caches are invalidated accordingly for modified nodes and their ancestors when the tree structure or node attribute values change.
+
+The caches allow instant reading of sub-lists/dicts in Θ(1) time and can often make structure attribute reading faster by 5x or even much more once the structure is rarely being modified. The downside is that it also increases memory usage by roughly 5x as well. This is not a concern on a general-purpose computer for structures representing lists/dicts with less than 1000 - 10,000 elements. However, for structures in this range or larger, it is recommended to consider changing the node or structure's class attribute ``use_cache`` to ``False``. This can be done as follows:
 
 .. code-block:: python
 
@@ -246,7 +295,8 @@ Each non-leaf Section node keeps a cache containing quickly readable references 
 
 The dict option for ``gettype`` in the ``Section.__call__()`` method is
 currently slower than the other options. For performance-critical uses, use the
-other options for ``gettype``. Alternatively, if a dict is required just for
+other options for ``gettype``.
+Alternatively, if a dict is required just for
 visual printing purposes, use the faster ``'full_dict'`` option for ``gettype``
 instead. This option returns dicts with valid values with keys that have string
 representations of the node names, but the keys are in reality references to

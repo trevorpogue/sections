@@ -76,3 +76,5 @@ docs/build
 
 # Debugging logs
 *outlog*
+
+.appveyor.yml

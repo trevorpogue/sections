@@ -136,56 +136,57 @@ class Meta(type):
         return node
 
     def _construct_children(
-            self,
-            node: SectionType,
-            args: SectionKeysOrObjects,
-            children_attrs: SectionAttrs,
-            keyname: str
+        self,
+        node: SectionType,
+        args: SectionKeysOrObjects,
+        children_attrs: SectionAttrs,
+        keyname: str
     ) -> None:
         """
         Recursively repeat construction per child with extracted child attrs.
         """
         nofchildren_from_attrs, children_from_args = (
-            self._get_children_data(node, args, children_attrs)
+            _get_children_data(node, args, children_attrs)
         )
         for child in children_from_args:
             node[getattr(child, keyname)] = child
         for child_i in range(nofchildren_from_attrs):
-            self._contruct_child(child_i, children_attrs, node, keyname)
+            _contruct_child(child_i, children_attrs, node, keyname)
 
-    def _contruct_child(
-            self, child_i: int, children_attrs: SectionAttrs,
-            node: SectionType, keyname: str
-    ) -> None:
-        child_attrs = {}
-        for k, v in children_attrs.items():
-            if len(v) > child_i:
-                child_attrs[k] = v[child_i]
-        key = child_attrs.get(keyname, child_i)
-        child_attrs[keyname] = key
-        child = _get_dictval_i(node, child_i)
-        if child is None:
-            child = node.__class__(parent=node, **child_attrs)
-        node[getattr(child, keyname)] = child
 
-    def _get_children_data(
-            self,
-            node: SectionType,
-            args: SectionKeysOrObjects,
-            attrs: SectionAttrs
-    ) -> Tuple[int, List[SectionType]]:
-        """
-        Return number of children nodes implied by provided self.__call__ kwds,
-        and any pre-constructed Section children passed in self.__call__ args.
-        """
-        nofchildren_from_attrs = (
-            max(_len(v) for v in attrs.values()) if attrs else 0)
-        children_from_args = []
-        for arg in args:
-            from . import Section
-            if isinstance(arg, Section):
-                children_from_args += [arg]
-        return (nofchildren_from_attrs, children_from_args)
+def _get_children_data(
+        node: SectionType,
+        args: SectionKeysOrObjects,
+        attrs: SectionAttrs
+) -> Tuple[int, List[SectionType]]:
+    """
+    Return number of children nodes implied by provided self.__call__ kwds,
+    and any pre-constructed Section children passed in self.__call__ args.
+    """
+    nofchildren_from_attrs = (
+        max(_len(v) for v in attrs.values()) if attrs else 0)
+    children_from_args = []
+    for arg in args:
+        from . import Section
+        if isinstance(arg, Section):
+            children_from_args += [arg]
+    return (nofchildren_from_attrs, children_from_args)
+
+
+def _contruct_child(
+        child_i: int, children_attrs: SectionAttrs,
+        node: SectionType, keyname: str
+) -> None:
+    child_attrs = {}
+    for k, v in children_attrs.items():
+        if len(v) > child_i:
+            child_attrs[k] = v[child_i]
+    key = child_attrs.get(keyname, child_i)
+    child_attrs[keyname] = key
+    child = _get_dictval_i(node, child_i)
+    if child is None:
+        child = node.__class__(parent=node, **child_attrs)
+    node[getattr(child, keyname)] = child
 
 
 def _len(x: Any) -> int:

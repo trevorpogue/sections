@@ -87,7 +87,7 @@ class StringParser:
         """
         s = ''
         if breadthfirst:
-            for key, child in self.items():
+            for child in self.values():
                 s += child.node_str() + '\n'
         else:
             s += self.node_str() + '\n'
