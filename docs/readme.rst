@@ -1,14 +1,5 @@
 .. start-badges
 
-[ s e | c t | i o | n s ]
-==============================
-
-|coveralls| |codacy| |codeclimate| |requires|
-
-|version| |supported-versions| |supported-implementations| |wheel|
-
-|docs| |commits-since| |downloads-week| |downloads|
-
 .. |coveralls| image:: https://coveralls.io/repos/github/trevorpogue/sections/badge.svg
     :alt: Coverage Status
     :target: https://coveralls.io/github/trevorpogue/sections
@@ -58,6 +49,15 @@
     :target: https://github.com/trevorpogue/sections/compare/v0.0.0...main
 
 .. end-badges
+
+[ s e | c t | i o | n s ]
+==============================
+
+|coveralls| |codacy| |codeclimate| |requires|
+
+|version| |supported-versions| |supported-implementations| |wheel|
+
+|docs| |commits-since| |downloads-week| |downloads|
 
 Flexible tree data structures for organizing lists and dicts into sections.
 
@@ -109,7 +109,7 @@ Properties and methods are automatically added to all nodes in a structure retur
                     :end-before: sphinx-end-properties
                     :dedent: 4
 
-Adding properties and methods this way doesn't affect the class definitions of Sections/nodes from other structures. See the **Detail - Properties/methods** section for how this works.
+Adding properties and methods this way doesn't affect the class definitions of Sections/nodes from other structures. See the **Details - Properties/methods** section for how this works.
 
 --------------------------------------------------------------------
 Construction: Build gradually or all at once
@@ -298,7 +298,15 @@ Performance
 
 Each non-leaf Section node keeps a cache containing quickly readable references to attribute dicts previously parsed from manually traversing through descendant nodes in an earlier read. The caches are invalidated accordingly for modified nodes and their ancestors when the tree structure or node attribute values change.
 
-The caches allow instant reading of sub-lists/dicts in Θ(1) time and can often make structure attribute reading faster by 5x, or even much more when the structure is rarely being modified. The downside is that it also increases memory usage by roughly 5x as well. This is not a concern on a general-purpose computer for structures representing lists/dicts with less than 1000 - 10,000 elements. However, for structures in this range or larger, it is recommended to consider changing the node or structure's class attribute ``use_cache`` to ``False``. This can be done as follows:
+The caches allow instant reading of sub-lists/dicts in Θ(1) time and can often
+make structure attribute reading faster by 5x, or even much more when the
+structure is rarely being modified.
+
+However, for structures representing lists/dicts with more than 1000 - 10,000
+elements, the extra memory consumption that this technique uses may start to
+make it not beneficial to use. It is therefore recommended to consider changing
+the node or structure's class attribute ``use_cache`` to ``False`` for
+structures in this range or larger. This can be done as follows:
 
 .. code-block:: python
 
