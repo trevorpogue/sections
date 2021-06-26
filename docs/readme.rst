@@ -44,9 +44,9 @@
     :alt: Requirements Status
     :target: https://requires.io/github/trevorpogue/sections/requirements/?branch=main
 
-.. |commits-since| image:: https://img.shields.io/github/commits-since/trevorpogue/sections/v0.0.1.svg
+.. |commits-since| image:: https://img.shields.io/github/commits-since/trevorpogue/sections/v0.0.2.svg
     :alt: Commits since latest release
-    :target: https://github.com/trevorpogue/sections/compare/v0.0.1...main
+    :target: https://github.com/trevorpogue/sections/compare/v0.0.2...main
 
 .. end-badges
 
