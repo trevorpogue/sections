@@ -67,7 +67,9 @@ def assert_L0_mod(s, var):
     assert s[0][0](var) == 0
     with pytest.raises(AttributeError):
         s[0][0].children(var)
-        s[0][0].all_leaves(var)
+    # TODO: this should raise AttributeError:
+    # with pytest.raises(AttributeError):
+        # s[0][0].leaves(var)
 
 
 def assert_L01_mod(s, var):
@@ -81,7 +83,9 @@ def assert_L01_mod(s, var):
     assert s[0][0](var) == 0
     with pytest.raises(AttributeError):
         s[0][0].children(var)
-        s[0][0].all_leaves(var)
+    # TODO: this should raise AttributeError:
+    # with pytest.raises(AttributeError):
+        # s[0][0].all_leaves(var)
 
 
 def assert_L0123_mod(s, var):
@@ -99,9 +103,14 @@ def assert_L0123_mod(s, var):
     assert s[1][1](var) == 3
     with pytest.raises(AttributeError):
         s[0][0].children(var)
-        s[0][0].all_leaves(var)
+    # TODO: this should raise AttributeError:
+    # with pytest.raises(AttributeError):
+        # s[0][0].all_leaves(var)
+    with pytest.raises(AttributeError):
         s[1][1].children(var)
-        s[1][1].all_leaves(var)
+    # TODO: this should raise AttributeError:
+    # with pytest.raises(AttributeError):
+        # s[1][1].all_leaves(var)
 
 
 def assert_c0_L0_mod(s, var):
@@ -125,7 +134,9 @@ def assert_c0_L03_mod(s, var):
     assert s[1][1](var) == 3
     with pytest.raises(AttributeError):
         s[1][1].children(var)
-        s[1][1].all_leaves(var)
+    # TODO: this should raise AttributeError:
+    # with pytest.raises(AttributeError):
+        # s[1][1].all_leaves(var)
 
 
 def assert_c01_L03_mod(s, var):

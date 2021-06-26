@@ -1,9 +1,9 @@
 import sections
 
 
-def test_str_breadthfirst() -> None:
-    """Test the printing string representation functions."""
-    library = sections(
+def get_library() -> None:
+    """Return the base library."""
+    return sections(
         {"My Bookshelf"},
         [{'Fantasy'}, 'LOTR', 'Harry Potter'],
         [{'Academic'}, 'Advanced Mathematics', 'Physics for Engineers'],
@@ -11,6 +11,11 @@ def test_str_breadthfirst() -> None:
                 [{'Imaginary things'}, 'Hobbits', 'Wizards'],
                 [{'School'}, 'Numbers', 'Forces']],
     )
+
+
+def test_str_breadthfirst() -> None:
+    """Test the printing string representation functions."""
+    library = get_library()
     node_str = library.node_str()
     deep_str_breadthfirst = library.deep_str()
     expected_node_str = (
@@ -66,14 +71,8 @@ def test_str_breadthfirst() -> None:
 
 
 def test_str_depthfirst() -> None:
-    library = sections(
-        {"My Bookshelf"},
-        [{'Fantasy'}, 'LOTR', 'Harry Potter'],
-        [{'Academic'}, 'Advanced Mathematics', 'Physics for Engineers'],
-        topics=[{'All my books'},
-                [{'Imaginary things'}, 'Hobbits', 'Wizards'],
-                [{'School'}, 'Numbers', 'Forces']],
-    )
+    """Test the depthfirst option."""
+    library = get_library()
     deep_str_depthfirst = library.deep_str(breadthfirst=False)
     expected_deep_str_depthfirst = (
         ""

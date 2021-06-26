@@ -59,7 +59,7 @@
 
 |docs| |commits-since| |downloads-week| |downloads|
 
-Flexible tree data structures for organizing lists and dicts into sections.
+Python package providing flexible tree data structures for organizing lists and dicts into sections.
 
 Sections is designed to be:
 
