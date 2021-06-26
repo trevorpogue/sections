@@ -61,7 +61,7 @@
 
 Flexible tree data structures for organizing lists and dicts into sections.
 
-``sections`` is designed to be:
+Sections is designed to be:
 
 * **Intuitive**: Start quickly and spend less time reading the docs.
 * **Scalable**: Grow arbitrarily complex trees as your problem scales.
@@ -96,7 +96,7 @@ Spend less time deciding between using the singular or plural form for an attrib
                     :end-before: sphinx-end-plural-singular
                     :dedent: 4
 
-If you don't like this feature, simply turn it off as shown in the **Details - Plural/singular attribute settings** section.
+If you don't like this feature, simply turn it off as shown in the **Details - Plural/singular attributes** section.
 
 --------------------------------------------------------------------
 Properties: Easily add on the fly
@@ -130,14 +130,14 @@ Details
 Section names
 --------------
 
-The non-keyword arguments passed into a ``sections()`` call define the section names and are accessed through the attribute ``name``. The names are used like ``keys`` in a ``dict`` to access each child section of the root Section node:
+The non-keyword arguments passed into a ``sections()`` call define the section names and are accessed through the attribute ``name``. The names are used like ``keys`` in a ``dict`` to access each child section of the root section node:
 
 .. literalinclude:: ../tests/test_doc_examples.py
                     :start-after: sphinx-start-names
                     :end-before: sphinx-end-names
                     :dedent: 4
 
-Names are optional, and by default, children names will be assigned as integer values corresponding to indices in an array, while a root has a default keyvalue of ``sections.SectionNone``:
+Names are optional, and by default, children names are assigned as integer values corresponding to indices in an array, while a root has a default keyvalue of ``sections.SectionNone``:
 
 .. literalinclude:: ../tests/test_doc_examples.py
                     :start-after: sphinx-start-names-printing
@@ -191,7 +191,7 @@ Set the default return type when accessing structure attributes by changing ``Se
 The above will also work for accessing attributes in the form ``object.attr`` but only if the node does not contain the attribute ``attr``, otherwise it will return the non-iterable raw value for ``attr``. Therefore, for consistency, access attributes using `Section.__call__()`_ like above if you wish to **always receive an iterable** form of the attributes.
 
 ----------------------------------------------------------------
-Plural/singular attribute settings
+Plural/singular attributes
 ----------------------------------------------------------------
 
 When an attribute is not found in a Section node, both the plural and singular

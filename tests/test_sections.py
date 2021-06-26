@@ -7,6 +7,7 @@ from sections import sections
 
 from .test_doc_examples import test_docs_examples_details
 from .test_doc_examples import test_docs_examples_usage
+from .test_indepth_usage import test_indepth_usage
 
 
 def get_basic_menu() -> Section:
@@ -151,6 +152,7 @@ def test_misc_overrides() -> None:
 def test_SectionNoneType() -> None:
     from sections import SectionNone
     assert str(SectionNone) == 'section'
+    assert repr(SectionNone) == "'section'"
 
 
 def test_gettypes() -> None:
@@ -236,6 +238,8 @@ def test_options_variations() -> None:
     Section.use_cache = False
     test_docs_examples_usage()
     test_docs_examples_details()
+    test_indepth_usage()
     Section.use_cache = True
     test_docs_examples_usage()
     test_docs_examples_details()
+    test_indepth_usage()

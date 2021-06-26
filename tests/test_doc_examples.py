@@ -37,7 +37,8 @@ def test_docs_examples_usage() -> None:
     import pytest
     tasks = sections('pay bill', 'clean', status=['completed', 'started'])
     assert tasks.statuses == ['completed', 'started']
-    sections.Section.use_pluralsingular = False  # turn off for all future objs
+    # turn off for all future structures:
+    sections.Section.use_pluralsingular = False
     tasks = sections('pay bill', 'clean', status=['completed', 'started'])
     with pytest.raises(AttributeError):
         tasks.statuses  # this now raises an AttributeError
@@ -174,9 +175,9 @@ def test_docs_examples_details() -> None:
             """A synonym for names."""
             return self.names
 
-        def critique(self, impression="Haven't read it yet", rating=0):
-            """Set the book price based on the impression."""
-            self.review = impression
+        def critique(self, review="Haven't read it yet", rating=0):
+            """Set the book price based on the rating."""
+            self.review = review
             self.price = rating * 2
 
     library = Library(
@@ -187,10 +188,12 @@ def test_docs_examples_details() -> None:
     assert library.books.titles == [
         'LOTR', 'Harry Potter', 'Advanced Math.', 'Physics for Engineers'
     ]
-    library.books['LOTR'].critique(impression='Good but too long', rating=7)
+    library.books['LOTR'].critique(review='Good but too long', rating=7)
     library.books['Harry Potter'].critique(
-        impression="I don't like owls", rating=4)
+        review="I don't like owls", rating=4)
+    assert library.books['LOTR'].review == 'Good but too long'
     assert library.books['LOTR'].price == 14
+    assert library.books['Harry Potter'].review == "I don't like owls"
     assert library.books['Harry Potter'].price == 8
     import pytest
     with pytest.raises(AttributeError):

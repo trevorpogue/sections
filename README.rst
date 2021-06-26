@@ -60,9 +60,9 @@
 |docs| |commits-since| |downloads-week| |downloads|
 
 
-Flexible tree data structures for organizing lists and dicts into sections.
+Python package providing flexible tree data structures for organizing lists and dicts into sections.
 
-``sections`` is designed to be:
+Sections is designed to be:
 
 * **Intuitive**: Start quickly and spend less time reading the docs.
 * **Scalable**: Grow arbitrarily complex trees as your problem scales.
@@ -70,7 +70,8 @@ Flexible tree data structures for organizing lists and dicts into sections.
 * **Fast**: Made with performance in mind - access lists and sub-lists/dicts in Θ(1) time in many cases. See the Performance section for the full details.
 * **Reliable**: Contains an exhaustive test suite and 100\% code coverage.
 
-See the full documentation at https://sections.readthedocs.io/. In addition to a repeat of this readme page, the docs also contain some other useful sections, in particular a References_ section, which more thoroughly documents all the interfacing methods for Section objects.
+See the full **documentation** at https://sections.readthedocs.io/. In addition to a
+repeat of this readme page, the docs also contain a References_ section, which more thoroughly documents all the interfacing methods for Section objects.
 
 =========================
 Usage
@@ -118,7 +119,7 @@ Spend less time deciding between using the singular or plural form for an attrib
     assert tasks['pay bill'].status == 'completed'
     assert tasks['clean'].status == 'started'
 
-If you don't like this feature, simply turn it off as shown in the **Details - Plural/singular attribute settings** section.
+If you don't like this feature, simply turn it off as shown in the **Details - Plural/singular attributes** section.
 
 --------------------------------------------------------------------
 Properties: Easily add on the fly
@@ -199,7 +200,7 @@ Details
 Section names
 --------------
 
-The non-keyword arguments passed into a ``sections()`` call define the section names and are accessed through the attribute ``name``. The names are used like ``keys`` in a ``dict`` to access each child section of the root Section node:
+The non-keyword arguments passed into a ``sections()`` call define the section names and are accessed through the attribute ``name``. The names are used like ``keys`` in a ``dict`` to access each child section of the root section node:
 
 .. code-block:: python
 
@@ -212,7 +213,7 @@ The non-keyword arguments passed into a ``sections()`` call define the section n
     assert books['LOTR'].name == 'LOTR'
     assert books['Harry Potter'].name == 'Harry Potter'
 
-Names are optional, and by default, children names will be assigned as integer values corresponding to indices in an array, while a root has a default keyvalue of ``sections.SectionNone``:
+Names are optional, and by default, children names are assigned as integer values corresponding to indices in an array, while a root has a default keyvalue of ``sections.SectionNone``:
 
 .. code-block:: python
 
@@ -299,7 +300,7 @@ Set the default return type when accessing structure attributes by changing ``Se
 The above will also work for accessing attributes in the form ``object.attr`` but only if the node does not contain the attribute ``attr``, otherwise it will return the non-iterable raw value for ``attr``. Therefore, for consistency, access attributes using `Section.__call__()`_ like above if you wish to **always receive an iterable** form of the attributes.
 
 ----------------------------------------------------------------
-Plural/singular attribute settings
+Plural/singular attributes
 ----------------------------------------------------------------
 
 When an attribute is not found in a Section node, both the plural and singular
@@ -317,7 +318,8 @@ If you don't like this feature, simply turn it off using the following:
     import pytest
     tasks = sections('pay bill', 'clean', status=['completed', 'started'])
     assert tasks.statuses == ['completed', 'started']
-    sections.Section.use_pluralsingular = False  # turn off for all future objs
+    # turn off for all future structures:
+    sections.Section.use_pluralsingular = False
     tasks = sections('pay bill', 'clean', status=['completed', 'started'])
     with pytest.raises(AttributeError):
         tasks.statuses  # this now raises an AttributeError
@@ -424,9 +426,9 @@ Inheriting Section is easy, the only requirement is to call ``super().__init__(*
             """A synonym for names."""
             return self.names
 
-        def critique(self, impression="Haven't read it yet", rating=0):
-            """Set the book price based on the impression."""
-            self.review = impression
+        def critique(self, review="Haven't read it yet", rating=0):
+            """Set the book price based on the rating."""
+            self.review = review
             self.price = rating * 2
 
     library = Library(
@@ -437,10 +439,12 @@ Inheriting Section is easy, the only requirement is to call ``super().__init__(*
     assert library.books.titles == [
         'LOTR', 'Harry Potter', 'Advanced Math.', 'Physics for Engineers'
     ]
-    library.books['LOTR'].critique(impression='Good but too long', rating=7)
+    library.books['LOTR'].critique(review='Good but too long', rating=7)
     library.books['Harry Potter'].critique(
-        impression="I don't like owls", rating=4)
+        review="I don't like owls", rating=4)
+    assert library.books['LOTR'].review == 'Good but too long'
     assert library.books['LOTR'].price == 14
+    assert library.books['Harry Potter'].review == "I don't like owls"
     assert library.books['Harry Potter'].price == 8
     import pytest
     with pytest.raises(AttributeError):

@@ -57,6 +57,10 @@ class SectionNoneType:
         """
         return 'section'
 
+    def __repr__(self) -> str:
+        """This is used for the same reason as for __str__."""
+        return "'section'"
+
 
 # SectionNoneType instantiation, like how None is an instantiation of NoneType
 SectionNone = SectionNoneType()

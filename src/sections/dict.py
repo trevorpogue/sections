@@ -116,10 +116,19 @@ class Dict:
         same unique Section type as the rest of the nodes in the structure, and
         update its name to `name`, and its parent to self.
         """
+        self._setitem(name, value)
+
+    def _setitem(
+            self, name: Any, value: Union[SectionType, AnyDict],
+            mod_child: bool = True
+    ) -> None:
+        """
+        Same as public __setitem__, but option to not modify child's parent.
+        """
         assert name.__hash__
         from . import Section
         if isinstance(value, Section):
-            child = self._convert_to_self_cls(name, value)
+            child = self._convert_to_self_cls(name, value, mod_child)
         elif isinstance(value, dict):
             child = self.cls(name, **{**value, 'parent': self})
         else:
@@ -128,14 +137,15 @@ class Dict:
         self._invalidate_caches()
 
     def _convert_to_self_cls(
-            self, name: Any, value: SectionType
+            self, name: Any, value: SectionType, mod_child: bool = True
     ) -> None:
         """Ensure output is of self's unique Section class instance type."""
         if isinstance(value, self.cls):
             child = value
-            child.__setattr__('parent', self, _invalidate_cache=False)
-            child.__setattr__(child._keyname, name,
-                              _invalidate_cache=False)
+            if mod_child:
+                child.__setattr__('parent', self, _invalidate_cache=False)
+                child.__setattr__(child._keyname, name,
+                                  _invalidate_cache=False)
         else:
             attrs = {k: v for k, v in value.__dict__.items()
                      if k[0] != '_'}

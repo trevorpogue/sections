@@ -60,7 +60,7 @@ class StringParser:
         if isinstance(value, Section):
             value = repr(value._name)
         else:
-            value = str(value) if name == str(self.cls) else repr(value)
+            value = repr(value)
         return f'    {name}{pad} = ' + value + '\n'
 
     def deep_str(
@@ -95,7 +95,7 @@ class StringParser:
             s += child._deep_str(breadthfirst=breadthfirst)
         return s
 
-    @ property
+    @property
     def _node_types(self) -> str:
         """Return info about the position of self node in the structure."""
         s = ''

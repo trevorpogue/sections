@@ -15,7 +15,7 @@ class Node:
 
     @ property
     def isroot(self, ) -> bool:
-        """True iff self node has not parent."""
+        """True iff self node has no parent."""
         return self.parent is None
 
     @ property
@@ -63,10 +63,26 @@ class Node:
         children. This can be useful if self has an attr `attr` but you want to
         access a list of the leaves' attr `attr`, then write
         section.leaves.attr to access the leaf attr list.
+
+        NOTE: This will exclude any leaves with duplicate names/keys. To avoid
+        this use :meth:`all_leaves <Section.all_leaves>`.
         """
         return self.node_withchildren_fromiter(self.leaves_iter)
 
-    def node_withchildren_fromiter(self, itr: iter) -> SectionType:
+    @ property
+    def all_leaves(self) -> SectionType:
+        """
+        This method differs from :meth:`leaves <Section.leaves>` in that it
+        will return all leaves even if some have duplicate names/keys. However,
+        unlike the `leaves` property, you cannot access the returned leaves
+        through keys in the form `structure.all_leaves['key/name']`.
+        """
+        return self.node_withchildren_fromiter(
+            self.leaves_iter, all_nodes=True)
+
+    def node_withchildren_fromiter(
+            self, itr: iter, all_nodes=False
+    ) -> SectionType:
         """
         Perform a general form of the task performed in
         :meth:`leaves <Section.leaves>`. Return a Section node with any
@@ -74,6 +90,7 @@ class Node:
         """
         node = self.cls()
         for leaf in itr:
-            node[getattr(leaf, self._keyname)] = (leaf)
+            key = leaf if all_nodes else leaf._name
+            node._setitem(key, leaf, mod_child=False)
         setattr(node, node._keyname, SectionNone)
         return node

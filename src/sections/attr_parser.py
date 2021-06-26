@@ -158,6 +158,11 @@ class AttrParser:
         else:
             return _get_iterable_attrs(attrs, gettype=gettype)
 
+    def __delattr__(self, name: str) -> None:
+        """Delete attribute `name`."""
+        super().__delattr__(name)
+        self._invalidate_caches(name)
+
 
 def _check_for_attribute_arror(
         name: str, attrs: AnyDict, gettype: GetType = 'default'
