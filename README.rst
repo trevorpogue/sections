@@ -1,12 +1,63 @@
+.. start-badges
+
+.. |coveralls| image:: https://coveralls.io/repos/github/trevorpogue/sections/badge.svg
+    :alt: Coverage Status
+    :target: https://coveralls.io/github/trevorpogue/sections
+
+.. |codacy| image:: https://app.codacy.com/project/badge/Grade/92804e7a0df44f09b42bc6ee1664bc67
+    :alt: Codacy Code Quality Status
+    :target: https://www.codacy.com/gh/trevorpogue/sections/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=trevorpogue/sections&amp;utm_campaign=Badge_Grade
+
+.. |codeclimate| image:: https://codeclimate.com/github/trevorpogue/sections/badges/gpa.svg
+   :alt: CodeClimate Quality Status
+   :target: https://codeclimate.com/github/trevorpogue/sections
+
+.. |version| image:: https://img.shields.io/pypi/v/sections.svg
+    :alt: PyPI Package latest release
+    :target: https://pypi.org/project/sections
+
+.. |supported-versions| image:: https://img.shields.io/pypi/pyversions/sections.svg
+    :alt: Supported versions
+    :target: https://pypi.org/project/sections
+
+.. |supported-implementations| image:: https://img.shields.io/pypi/implementation/sections.svg
+    :alt: Supported implementations
+    :target: https://pypi.org/project/sections
+
+.. |wheel| image:: https://img.shields.io/pypi/wheel/sections.svg
+    :alt: PyPI Wheel
+    :target: https://pypi.org/project/sections
+
+.. |downloads| image:: https://pepy.tech/badge/sections
+    :alt: downloads
+    :target: https://pepy.tech/project/sections
+
+.. |downloads-week| image:: https://pepy.tech/badge/sections/week
+    :alt: downloads
+    :target: https://pepy.tech/project/sections
+
+.. |docs| image:: https://readthedocs.org/projects/sections/badge/?style=flat
+    :alt: Documentation Status
+    :target: https://sections.readthedocs.io/
+
+.. |requires| image:: https://requires.io/github/trevorpogue/sections/requirements.svg?branch=main
+    :alt: Requirements Status
+    :target: https://requires.io/github/trevorpogue/sections/requirements/?branch=main
+
+.. |commits-since| image:: https://img.shields.io/github/commits-since/trevorpogue/sections/v0.0.2.svg
+    :alt: Commits since latest release
+    :target: https://github.com/trevorpogue/sections/compare/v0.0.2...main
+
+.. end-badges
 
 [ s e | c t | i o | n s ]
 *************************
 
-`https://coveralls.io/github/trevorpogue/sections <https://coveralls.io/github/trevorpogue/sections>`_ `https://www.codacy.com/gh/trevorpogue/sections/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=trevorpogue/sections&amp;utm_campaign=Badge_Grade <https://www.codacy.com/gh/trevorpogue/sections/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=trevorpogue/sections&amp;utm_campaign=Badge_Grade>`_ `https://codeclimate.com/github/trevorpogue/sections <https://codeclimate.com/github/trevorpogue/sections>`_ `https://requires.io/github/trevorpogue/sections/requirements/?branch=main <https://requires.io/github/trevorpogue/sections/requirements/?branch=main>`_
+|coveralls| |codacy| |codeclimate| |requires|
 
-`https://pypi.org/project/sections <https://pypi.org/project/sections>`_ `https://pypi.org/project/sections <https://pypi.org/project/sections>`_ `https://pypi.org/project/sections <https://pypi.org/project/sections>`_ `https://pypi.org/project/sections <https://pypi.org/project/sections>`_
+|version| |supported-versions| |supported-implementations| |wheel|
 
-`https://sections.readthedocs.io/ <https://sections.readthedocs.io/>`_ `https://github.com/trevorpogue/sections/compare/v0.0.2...main <https://github.com/trevorpogue/sections/compare/v0.0.2...main>`_ `https://pepy.tech/project/sections <https://pepy.tech/project/sections>`_ `https://pepy.tech/project/sections <https://pepy.tech/project/sections>`_
+|docs| |commits-since| |downloads-week| |downloads|
 
 Python package providing flexible tree data structures for organizing lists and dicts into sections.
 
