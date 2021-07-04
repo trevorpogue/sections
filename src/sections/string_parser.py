@@ -1,71 +1,68 @@
 from typing import Any
 
+from .types import SectionNone
 
-class StringParser:
+
+class SectionStringParser:
     """String parsing methods for visualizing nodes and structures."""
 
     @property
-    def _name(self) -> str:
+    def __name(self) -> str:
         """
         Easily get the name/key of self node. This is slightly non-trivial
         because the name of the attribute representing the nodes name/key is
-        contained in self._keyname and may be user-customizable in the future.
+        contained in self._Section__keyname and may be user-customizable in the
+        future.
         """
-        return getattr(self, self._keyname)
+        return getattr(self, self._Section__keyname)
 
     def __str__(self) -> str:
         """
-        Return self._name by default when printing self. Use
+        Return :meth:`descendants_str <Section.descendants_str>` by default.
+        See also
         :meth:`node_str <Section.node_str>` or
-        :meth:`deep_str <Section.deep_str>` for printing a
         more detailed view of the node or entire structure.
         """
-        return str(self._name)
-
-    def __repr__(self) -> str:
-        """
-        For use in :meth:`_parse_top_getattr <Section._parse_top_getattr>`.
-        Allows a dict with Section keys to easily be converted to a dict
-        with node names as keys instead so that the values can actually be
-        accessed through the names.
-
-        TODO: A better approach not using repr for this will likely need to be
-        implemented for the above in the future so that a valid repr string can
-        be returned when used for other uses.
-        """
-        return "'" + str(self._name) + "'"
+        return self.descendants_str()
 
     def node_str(self) -> str:
         """
         Neatly print the public attributes of the Section node and its class,
         as well as its types property output.
         """
-        s = repr(self._name) + ' = <' + self._node_types + '>\n'
-        other_params = {
-            'parent': self._name,
-            'children': (list(self.keys())),
-        }
-        if self.isleaf:
-            other_params.pop('children')
-        attrs = {k: v for k, v in self.__dict__.items() if k[0] != '_'}
-        attrs = {**other_params, **{self._keyname: str(self._name)}, **attrs}
-        attrs.pop(self._keyname, None)
-        for name, value in attrs.items():
-            s += self._parse_public_node_attrs(name, value)
+        return self.__node_str()
+
+    def __node_str(self) -> str:
+        section_name = (
+            # repr(str(self.__name)) + '\n'
+            ''
+            if self.__name is SectionNone
+            else repr(self.__name) + '\n')
+        attrs = {k: v for k, v in self.__dict__.items()
+                 if not k.startswith(self.cls._Section__private_prefix)}
+        attrs.pop(self._Section__keyname, None)
+        attrs.pop('parent', None)
+        s = ''
+        for name in attrs:
+            s += f'{name}' + '\n'
+        longest_line_len = 0
+        for line in s[:-1].split('\n'):
+            if len(line) > longest_line_len:
+                longest_line_len = len(line)
+        prev_s = s
+        s = section_name
+        attr_strings = prev_s[:-1].split('\n')
+        for name, value in zip(attr_strings, attrs.values()):
+            s += self.__parse_public_node_attrs(name, value, longest_line_len)
         return s
 
-    def _parse_public_node_attrs(self, name: Any, value: Any) -> str:
-        from . import Section
-        pad = ''
-        if isinstance(value, Section):
-            value = repr(value._name)
-        else:
-            value = repr(value)
-        return f'    {name}{pad} = ' + value + '\n'
+    def __parse_public_node_attrs(
+            self, name: Any, value: Any, longest_line_len: str) -> str:
+        value = repr(value)
+        pad = ' ' * (longest_line_len - len(name))
+        return f'{name}' + pad + ' = ' + value + '\n'
 
-    def deep_str(
-            self, breadthfirst: bool = True
-    ) -> str:
+    def descendants_str(self) -> str:
         """
         Print the output of :meth:`node_str <Section.node_str` for self and all
         of its descendants.
@@ -73,39 +70,42 @@ class StringParser:
         :param breadthfirst: Set True to print descendants in a breadth-first
                pattern or False for depth-first.
         """
-        s = '#' * 79 + '\n'
-        s += '<class ' + repr(self.cls.__name__) + '> structure\n\n'
-        if breadthfirst:
-            s += self.node_str() + '\n'
-        s += self._deep_str(breadthfirst=breadthfirst)[:-1]  # remove last '\n'
-        s += '#' * 79 + '\n'
-        return s
+        return '\n' + self.__descendants_str()
 
-    def _deep_str(self, breadthfirst: bool = True) -> str:
+    def __descendants_str(
+            self, depth: int = 0, prev_depths_s: str = '',
+            prev_header_len: int = 0,
+    ) -> str:
         """
-        Private recursive call for :meth:`deep_str <Section.deep_str`.
+        Private recursive call for
+        :meth:`descendants_str <Section.descendants_str`.
         """
         s = ''
-        if breadthfirst:
-            for child in self.values():
-                s += child.node_str() + '\n'
-        else:
-            s += self.node_str() + '\n'
-        for child in self.values():
-            s += child._deep_str(breadthfirst=breadthfirst)
+        s += self.__node_str()
+        lpad = '' if depth == 0 else '  '
+        if depth == 1 and prev_depths_s == '':
+            lpad = ''
+        cur_depths_s = s
+        for i, child in enumerate(self.values()):
+            s += child.__descendants_str(
+                depth + 1, cur_depths_s)
+        header_len = 0
+        for line in s[:-1].split('\n'):
+            if len(line) > header_len:
+                header_len = len(line)
+        lpad = lpad + '│ '
+        lines = []
+        for line in s[:-1].split('\n'):
+            rpad_len = header_len - len(line)
+            rpad = ' ' * rpad_len + ' '
+            # if self.isparent:
+            # rpad += ' '
+            rpad += '│'
+            lines.append(lpad + line + rpad)
+        s = '\n'.join(lines) + '\n'
+        # header_len += 3 if self.isparent else 2
+        header_len += 2
+        top_header = lpad[:-2] + ' ' + '_' * header_len + '\n'
+        bottom_header = lpad[:-2] + ' ' + '¯' * header_len + '\n'
+        s = top_header + s + bottom_header
         return s
-
-    @property
-    def _node_types(self) -> str:
-        """Return info about the position of self node in the structure."""
-        s = ''
-        divider = ', '
-        if self.isroot:
-            s += 'root' + divider
-        if self.ischild:
-            s += 'child' + divider
-        if self.isparent:
-            s += 'parent' + divider
-        if self.isleaf:
-            s += 'leaf' + divider
-        return s[:-len(divider)]

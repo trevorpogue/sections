@@ -1,11 +1,11 @@
+from collections import OrderedDict
 from itertools import chain
 from itertools import repeat
 
-from .types import SectionNone
 from .types import SectionType
 
 
-class Node:
+class SectionNode:
     """Generic tree-structure node-related logic."""
 
     @ property
@@ -42,9 +42,37 @@ class Node:
         list of the childrens' attr `attr`, then write section.children.attr to
         access the attr list.
         """
-        node = self.cls()
-        node._update(self)
-        setattr(node, node._keyname, SectionNone)
+        return self.node_withchildren_fromiter(self.values())
+
+    def node_withchildren_fromiter(
+            self, itr: iter
+    ) -> SectionType:
+        """
+        Perform a general form of the task performed in
+        :meth:`leaves <Section.leaves>`. Return a Section node with any
+        children referenced in the iterable from the `itr` argument.
+        """
+        import sections
+        root = sections()
+        root._SectionDict__children_by_name = {}
+        for node in itr:
+            OrderedDict.__setitem__(root, node, node)
+            name = node._SectionStringParser__name
+            root._SectionDict__children_by_name[name] = node
+        delattr(root, 'name')
+        return root
+
+    @ property
+    def node(self) -> SectionType:
+        """
+        Return a shallow copy of self with no children. Useful for searching
+        for attributes only in self.
+        """
+        import sections
+        node = sections()
+        node.__dict__ = self.__dict__
+        for attr in self._setattr_invalidate_cache_excludes:
+            setattr(node, attr, getattr(self, attr))
         return node
 
     @ property
@@ -56,6 +84,33 @@ class Node:
                 if self.isparent else repeat(self, 1))
 
     @ property
+    def descendants_iter(self) -> iter:
+        """
+        Return iterator that iterates through self and all self's descendants.
+        """
+        return (
+            chain(repeat(self, 1),
+                  *(child.descendants_iter for child in self.values()))
+            if self.isparent else repeat(self, 1))
+
+    @ property
+    def descendants(self) -> SectionType:
+        """
+        Similar to :meth:`leaves <Section.leaves>` except all nodes in
+        structure are returned.
+        """
+        return self.node_withchildren_fromiter(
+            self.descendants_iter)
+
+    @ property
+    def flat(self) -> SectionType:
+        """
+        Synonym for :meth:`descendants <Section.descendants>`.
+        """
+        return self.node_withchildren_fromiter(
+            self.descendants_iter)
+
+    @ property
     def leaves(self) -> SectionType:
         """
         Get all leaf node descendants of self. Returns a Section node that has
@@ -63,34 +118,5 @@ class Node:
         children. This can be useful if self has an attr `attr` but you want to
         access a list of the leaves' attr `attr`, then write
         section.leaves.attr to access the leaf attr list.
-
-        NOTE: This will exclude any leaves with duplicate names/keys. To avoid
-        this use :meth:`all_leaves <Section.all_leaves>`.
         """
         return self.node_withchildren_fromiter(self.leaves_iter)
-
-    @ property
-    def all_leaves(self) -> SectionType:
-        """
-        This method differs from :meth:`leaves <Section.leaves>` in that it
-        will return all leaves even if some have duplicate names/keys. However,
-        unlike the `leaves` property, you cannot access the returned leaves
-        through keys in the form `structure.all_leaves['key/name']`.
-        """
-        return self.node_withchildren_fromiter(
-            self.leaves_iter, all_nodes=True)
-
-    def node_withchildren_fromiter(
-            self, itr: iter, all_nodes=False
-    ) -> SectionType:
-        """
-        Perform a general form of the task performed in
-        :meth:`leaves <Section.leaves>`. Return a Section node with any
-        children referenced in the iterable from the `itr` argument.
-        """
-        node = self.cls()
-        for leaf in itr:
-            key = leaf if all_nodes else leaf._name
-            node._setitem(key, leaf, mod_child=False)
-        setattr(node, node._keyname, SectionNone)
-        return node

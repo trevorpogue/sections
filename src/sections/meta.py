@@ -14,7 +14,7 @@ from .types import SectionParent
 from .types import SectionType
 
 
-class Meta(type):
+class MetaSection(type):
     """
     Parses args and kwds passed to a sections() call or :class:`Section
     <Section>` instantiation and returns a Section tree structure. Parses
@@ -25,10 +25,10 @@ class Meta(type):
     singular_keyname = 'name'
     plural_keyname = 'names'
     default_keyvalue = SectionNone
+    list_attr_prefix = '_'
 
     ##########################################################################
     #                   Tree structure node construction                     #
-
     def __call__(
             self,
             *args: SectionKeysOrObjects,
@@ -39,13 +39,14 @@ class Meta(type):
         Construct a tree structure of Section nodes based on the args and kwds
         provided by user in a sections() call or a Section() instantiation.
         """
-        node_attrs, children_attrs, keyname = self._parse_attrs(
+        args = list(args)
+        node_attrs, children_attrs, keyname = self.__parse_attrs(
             args, kwds, parent)
-        node = self._construct_node(parent, node_attrs)
-        _construct_children(node, args, children_attrs, keyname)
+        node = self.__construct_node(parent, node_attrs)
+        self.__construct_children(node, args, children_attrs, keyname)
         return node
 
-    def _parse_attrs(
+    def __parse_attrs(
             self,
             args: SectionKeysOrObjects,
             kwds: SectionAttr,
@@ -59,14 +60,34 @@ class Meta(type):
         """
         node_attrs, children_attrs = {}, {}
         keyname = self.singular_keyname
-        keys = self._parse_keys(args, kwds, keyname)
+        keys = self.__parse_keys(args, kwds, keyname)
         for k, v in {**kwds, **keys}.items():
-            _parse_node_attrs(k, v, node_attrs, children_attrs)
-        self._fix_key_if_invalid(node_attrs, parent, keyname)
-        node_attrs['_keyname'] = keyname
+            self.__parse_node_attrs(k, v, node_attrs, children_attrs)
+        node_attrs.pop(self.plural_keyname, None)
+        children_attrs.pop(self.plural_keyname, None)
+        self.__fix_node_key_if_invalid(node_attrs, parent, keyname)
+        if children_attrs.get(keyname):
+            _fix_children_keys_if_invalid(children_attrs, keyname)
+        node_attrs['_Section__keyname'] = keyname
         return node_attrs, children_attrs, keyname
 
-    def _parse_keys(
+    def __parse_node_attrs(
+        self, name: str, value: Any, node_attrs: SectionAttrs,
+        children_attrs: SectionAttrs
+    ) -> None:
+        """
+        Extract attrs intended for current node from user-provided args/kwds.
+        """
+        if (not isinstance(value, list)
+                or name.startswith(self.list_attr_prefix)):
+            node_attrs[name] = value
+        else:
+            if len(value) > 0 and isinstance(value[0], set):
+                value = copy(value)
+                node_attrs[name] = value.pop(0).copy().pop()
+            children_attrs[name] = value
+
+    def __parse_keys(
             self,
             args: SectionKeysOrObjects,
             kwds: SectionAttr,
@@ -79,10 +100,10 @@ class Meta(type):
                 and _dict_haskey(kwds, self.plural_keyname)):
             keys[keyname] = kwds.get(self.plural_keyname)
         if not _dict_haskey(keys, keyname):
-            keys[keyname] = self._getkeys_from_argskwds(args, kwds)
+            keys[keyname] = self.__getkeys_from_argskwds(args, kwds)
         return keys
 
-    def _getkeys_from_argskwds(
+    def __getkeys_from_argskwds(
             self,
             args: SectionKeysOrObjects,
             kwds: SectionAttrs
@@ -90,7 +111,11 @@ class Meta(type):
         """
         Parse keys from args or kwds if it wasn't explicitly provided in kwds.
         """
-        if len(args) == 1 and not isinstance(args[0], list):
+        if _args_is_str_and_sections(*args):
+            args[0] = {args[0]}
+        from sections import Section
+        if (len(args) == 1 and not isinstance(args[0], list)
+                and not isinstance(args[0], Section)):
             # if given a single non-list argument it will be used only as
             # current node's name/key
             return list(args)[0]
@@ -102,7 +127,7 @@ class Meta(type):
             # otherwise, use the default for the current node
             return self.default_keyvalue
 
-    def _fix_key_if_invalid(
+    def __fix_node_key_if_invalid(
             self, attrs: SectionAttrs, parent: SectionParent, keyname: str
     ) -> None:
         """
@@ -117,7 +142,7 @@ class Meta(type):
             keyvalue = default_keyvalue
         attrs[keyname] = keyvalue
 
-    def _construct_node(
+    def __construct_node(
             self, parent: SectionParent, attrs: SectionAttrs
     ) -> SectionType:
         """
@@ -135,27 +160,58 @@ class Meta(type):
             setattr(node.__class__, k, v)
         return node
 
+    def __construct_children(
+        self,
+        node: SectionType,
+        args: SectionKeysOrObjects,
+        children_attrs: SectionAttrs,
+        keyname: str
+    ) -> None:
+        """
+        Recursively repeat construction per child with extracted child attrs.
+        """
+        nofchildren_from_attrs, children_from_args = (
+            _get_children_data(args, children_attrs)
+        )
+        for i, child in enumerate(children_from_args):
+            key = getattr(child, keyname)
+            if key is SectionNone:
+                key = i
+            node[key] = child
+        for child_i in range(nofchildren_from_attrs):
+            self.__contruct_child(child_i, children_attrs, node, keyname)
 
-def _construct_children(
-    node: SectionType,
-    args: SectionKeysOrObjects,
-    children_attrs: SectionAttrs,
-    keyname: str
-) -> None:
-    """
-    Recursively repeat construction per child with extracted child attrs.
-    """
-    nofchildren_from_attrs, children_from_args = (
-        _get_children_data(node, args, children_attrs)
-    )
-    for child in children_from_args:
-        node[getattr(child, keyname)] = child
-    for child_i in range(nofchildren_from_attrs):
-        _contruct_child(child_i, children_attrs, node, keyname)
+    def __contruct_child(
+        self,
+        child_i: int, children_attrs: SectionAttrs,
+        node: SectionType, keyname: str
+    ) -> None:
+        """Parse attr[i] from each attr and give to child."""
+        child_attrs = {}
+        for k, v in children_attrs.items():
+            if len(v) > child_i:
+                child_attrs[k] = v[child_i]
+        child = _get_dictval_i(node, child_i)
+        if child:  # if child is Section instance
+            for name, value in child_attrs.items():
+                setattr(child, name, value)
+        else:
+            child_attrs[keyname] = child_attrs.get(keyname, child_i)
+            child = self(parent=node, **child_attrs)
+            node[getattr(child, keyname)] = child
+
+
+def _fix_children_keys_if_invalid(child_attrs, keyname):
+    from sections import Section
+    keys = child_attrs[keyname]
+    newkeys = []
+    for key in keys:
+        if not isinstance(key, Section):
+            newkeys.append(key)
+    child_attrs[keyname] = newkeys
 
 
 def _get_children_data(
-        node: SectionType,
         args: SectionKeysOrObjects,
         attrs: SectionAttrs
 ) -> Tuple[int, List[SectionType]]:
@@ -171,23 +227,6 @@ def _get_children_data(
         if isinstance(arg, Section):
             children_from_args += [arg]
     return (nofchildren_from_attrs, children_from_args)
-
-
-def _contruct_child(
-        child_i: int, children_attrs: SectionAttrs,
-        node: SectionType, keyname: str
-) -> None:
-    """Parse attr[i] from each attr and give to child."""
-    child_attrs = {}
-    for k, v in children_attrs.items():
-        if len(v) > child_i:
-            child_attrs[k] = v[child_i]
-    key = child_attrs.get(keyname, child_i)
-    child_attrs[keyname] = key
-    child = _get_dictval_i(node, child_i)
-    if child is None:
-        child = node.__class__(parent=node, **child_attrs)
-    node[getattr(child, keyname)] = child
 
 
 def _len(x: Any) -> int:
@@ -212,17 +251,14 @@ def _get_dictval_i(d: AnyDict, i: int) -> Any:
     return ret
 
 
-def _parse_node_attrs(
-        name: str, value: Any, node_attrs: SectionAttrs,
-        children_attrs: SectionAttrs
-) -> None:
-    """
-    Extract attrs intended for current node from user-provided args/kwds.
-    """
-    if not isinstance(value, list):
-        node_attrs[name] = value
+def _args_is_str_and_sections(*args: Any):
+    if len(args) <= 1:
+        args_is_str_and_sections = False
     else:
-        if len(value) > 0 and isinstance(value[0], set):
-            value = copy(value)
-            node_attrs[name] = value.pop(0).copy().pop()
-        children_attrs[name] = value
+        args_is_str_and_sections = isinstance(args[0], str)
+        from sections import Section
+        for arg in args[1:]:
+            if not isinstance(arg, Section):
+                args_is_str_and_sections = False
+                break
+    return args_is_str_and_sections

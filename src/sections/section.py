@@ -9,18 +9,19 @@ from typing import List
 from typing import Type
 from typing import Union
 
-from .attr_parser import AttrParser
-from .dict import Dict
-from .meta import Meta
-from .node import Node
-from .string_parser import StringParser
+from .attr_parser import SectionAttrParser
+from .dict import SectionDict
+from .meta import MetaSection
+from .node import SectionNode
+from .string_parser import SectionStringParser
 from .types import GetType
 from .types import SectionAttrs
+from .types import SectionNone
 from .types import SectionType
 
 
-class Section(Node, Dict, AttrParser, StringParser, dict,
-              metaclass=Meta):
+class Section(SectionNode, SectionDict, SectionAttrParser, SectionStringParser,
+              metaclass=MetaSection):
     """
     Objects instantiated by :class:`Section <Section>` are nodes in a sections
     tree structure. Each node has useful methods and properties for organizing
@@ -49,19 +50,28 @@ class Section(Node, Dict, AttrParser, StringParser, dict,
     use_cache = True
 
     # See method Section.get_nearest_attr's doctring for a full description of
-    # gettype and its default value. 'hybrid' returns a list if more than 1
-    # element is found, else return the non-iterable raw form of the element
+    # gettype and their default value. 'hybrid' returns a list if more
+    # than 1 element is found, else return the non-iterable raw form of the
+    # element
     default_gettype = 'hybrid'
 
+    default_attr = 'names'
+    list_attr_prefix = '_'
+    # See https://sections.readthedocs.io/ for usage:
     use_pluralsingular = True
     ##########################################################################
+    __private_prefix = '_Section'
 
     def __init__(self, **kwds: SectionAttrs) -> None:
         """Set object attr for every attr in kwds and init attr cache."""
-        if self.use_cache and self.isleaf:
-            self._cache = {}
+        SectionAttrParser.__init__(self)
+        self._SectionAttrParser__cache = {}
         for name, value in kwds.items():
             self.__setattr__(name, value, _invalidate_cache=False)
+
+    # def post_init(self) -> None:
+        # """Called after nodes children (if any) have been constructed."""
+        # pass
 
     @property
     def cls(self) -> Type[SectionType]:
@@ -78,10 +88,19 @@ class Section(Node, Dict, AttrParser, StringParser, dict,
         """A synonym for property :meth:`leaves <Section.leaves>`."""
         return self.leaves
 
+    def structure_change(self):
+        """
+        Will be called every time there is a change in structure, i.e. whenever
+        a node is added or removed or rearranged in child order. Meant for use
+        when overriding.
+        """
+        pass
+
     def __call__(
             self,
-            name: str,
-            gettype: GetType = 'default'
+            name: str = SectionNone,
+            gettype: GetType = 'default',
+            default: Any = SectionNone,
     ) -> Union[Any, List[Any]]:
         """
         Run :meth:`get_nearest_attr <Section.get_nearest_attr>`. This
@@ -90,30 +109,42 @@ class Section(Node, Dict, AttrParser, StringParser, dict,
         pattern for each of self's children, putting the returned results from
         each child into a list. Else, raise AttributeError.
 
-        For argument `gettype`, Setting to `'default'` uses the value of
-        self.default_gettype for gettype (its default is 'hybrid'). Setting to
-        `'hybrid'` returns a list if more than 1 element is found, else returns
-        the non-iterable raw form of the element. Setting to `list` returns a
-        list containing the attribute values. Setting to `iter` returns an
-        iterable iterating through the attribute values. Setting to `dict`
-        returns a dict containing pairs of the containing node's name with the
-        attribute value. Setting to `'full_dict'` is faster than `dict` and
-        returns a dict containing pairs of a reference to each node and its
-        attribute value. `'full_dict'` output is visually identical to `dict`
-        for printing purposes except that it will contain all attributes even
-        if some source nodes have duplicate names. The only downside to
-        `'full_dict'` is that the keys cannot be referenced by name like with
-        `dict`, but all values() are still valid.
 
         :param name: The name of the attribute to find in self or self's
                      descendants.
 
         :param gettype: Valid values are `'default'`, `'hybrid'` `list`,
-                        `iter`, `dict`, `'full_dict'`. See method's description
-                        body above for explanation of what each value does.
+                        `iter`, `dict`, `'self'`.
+                        Setting to `'default'` uses the value of
+                        self.default_gettype for gettype
+                        (its default is 'hybrid'). Setting to
+                        `'hybrid'` returns a list if more
+                        than 1 element is found, else returns
+                        the non-iterable raw form of
+                        the element. Setting to `list` returns a
+                        list containing the attribute values.
+                        Setting to `iter` returns an
+                        iterable iterating through the
+                        attribute values. Setting to `dict`
+                        returns a dict containing pairs of
+                        the containing node's name with the
+                        attribute value. Setting to `'self'` will only search
+                        for attrs in self, and will never wrap the attr
+                        in an iterable form like the dict/list/iter options.
+
+        searches for attributes only in self. Setting to `'nearest'` also
+        searches through
+
+        :param default: If not provided, AttributeError will be raised if attr
+                        `name` not found. If given, return default if attr
+                        `name` not found.
 
         :return: An iterable or non-iterable form of the attribute `name`
                  formed from self or descendant nodes. Depends on the value
                  given to `gettype`.
         """
-        return self.get_nearest_attr(name, gettype=gettype)
+        if name is SectionNone:
+            name = self.default_attr
+        attrs = self._get_nearest_attr(name)
+        return self._parse_top_getattr(name, attrs, gettype=gettype,
+                                       default=default)

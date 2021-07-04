@@ -8,16 +8,18 @@ __version__ = '0.0.2'
 __all__ = ['MetaSection', 'Section', 'SectionNone']
 
 import sys
-from typing import Type
 
-from .meta import Meta as MetaSection
+from .meta import MetaSection
 from .section import Section
-from .types import SectionAttrs
-from .types import SectionKeysOrObjects
 from .types import SectionNone
 
 
 class Module:
+
+    from typing import Type
+
+    from .types import SectionAttrs
+    from .types import SectionKeysOrObjects
 
     """Class form of sections module to make the module callable."""
 

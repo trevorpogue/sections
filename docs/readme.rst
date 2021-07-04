@@ -50,6 +50,7 @@
 
 .. end-badges
 
+==============================
 [ s e | c t | i o | n s ]
 ==============================
 
@@ -63,7 +64,7 @@ Python package providing flexible tree data structures for organizing lists and 
 
 Sections is designed to be:
 
-* **Intuitive**: Start quickly and spend less time reading the docs.
+* **Intuitive**: Start quickly, spend less time reading the docs.
 * **Scalable**: Grow arbitrarily complex trees as your problem scales.
 * **Flexible**: Rapidly build nodes with custom attributes, properties, and methods on the fly.
 * **Fast**: Made with performance in mind - access lists and sub-lists/dicts in Θ(1) time in many cases. See the Performance section for the full details.
@@ -77,13 +78,37 @@ Usage
 
 .. code-block:: bash
 
-    pip install sections
+    $ pip install sections
 
 .. literalinclude:: ../tests/test_doc_examples.py
                     :start-after: sphinx-start-usage
                     :end-before: sphinx-end-usage
                     :dedent: 4
+                    :language: python
 
+.. literalinclude:: ./examples_print_output.txt
+                    :start-after: sphinx-start-usage
+                    :end-before: sphinx-end-usage
+                    :language: python
+
+.. literalinclude:: ../tests/test_doc_examples.py
+                    :start-after: sphinx-start-usage-assert
+                    :end-before: sphinx-end-usage-assert
+                    :dedent: 4
+                    :language: python
+
+**Scale in size:**
+
+.. literalinclude:: ../tests/test_doc_examples.py
+                    :start-after: sphinx-start-complex
+                    :end-before: sphinx-end-complex
+                    :dedent: 4
+                    :language: python
+
+.. literalinclude:: ./examples_print_output.txt
+                    :start-after: sphinx-start-complex
+                    :end-before: sphinx-end-complex
+                    :language: python
 
 ----------------------------------------------------------------
 Attrs: Plural/singular hybrid attributes and more
@@ -95,6 +120,7 @@ Spend less time deciding between using the singular or plural form for an attrib
                     :start-after: sphinx-start-plural-singular
                     :end-before: sphinx-end-plural-singular
                     :dedent: 4
+                    :language: python
 
 If you don't like this feature, simply turn it off as shown in the **Details - Plural/singular attributes** section.
 
@@ -108,6 +134,7 @@ Properties and methods are automatically added to all nodes in a structure retur
                     :start-after: sphinx-start-properties
                     :end-before: sphinx-end-properties
                     :dedent: 4
+                    :language: python
 
 Adding properties and methods this way doesn't affect the class definitions of Sections/nodes from other structures. See the **Details - Properties/methods** section for how this works.
 
@@ -121,6 +148,7 @@ Construct section-by-section, section-wise, attribute-wise, or other ways:
                     :start-after: sphinx-start-books-construction
                     :end-before: sphinx-end-books-construction
                     :dedent: 4
+                    :language: python
 
 =============
 Details
@@ -136,6 +164,7 @@ The non-keyword arguments passed into a ``sections()`` call define the section n
                     :start-after: sphinx-start-names
                     :end-before: sphinx-end-names
                     :dedent: 4
+                    :language: python
 
 Names are optional, and by default, children names are assigned as integer values corresponding to indices in an array, while a root has a default keyvalue of ``sections.SectionNone``:
 
@@ -143,17 +172,19 @@ Names are optional, and by default, children names are assigned as integer value
                     :start-after: sphinx-start-names-printing
                     :end-before: sphinx-end-names-printing
                     :dedent: 4
+                    :language: python
 
 ---------------------------------
 Parent names and attributes
 ---------------------------------
 
-A parent section name can optionally be provided as the first argument in a list or Section instantiation by defining it in a set (surrounding it with curly brackets). This strategy avoids an extra level of braces when instantiating Section objects. This idea applies also for defining parent attributes:
+A parent section name can optionally be provided as the first argument in a ``sections()`` call by defining it in a set (surrounding it with curly brackets). This strategy avoids an extra level of braces when instantiating Section objects. This idea applies also for defining parent attributes:
 
 .. literalinclude:: ../tests/test_doc_examples.py
                     :start-after: sphinx-start-parent-names
                     :end-before: sphinx-end-parent-names
                     :dedent: 4
+                    :language: python
 
 -----------------------------------------------
 Return attributes as a list, dict, or iterable
@@ -187,6 +218,7 @@ Set the default return type when accessing structure attributes by changing ``Se
                     :start-after: sphinx-start-gettype
                     :end-before: sphinx-end-gettype
                     :dedent: 4
+                    :language: python
 
 The above will also work for accessing attributes in the form ``object.attr`` but only if the node does not contain the attribute ``attr``, otherwise it will return the non-iterable raw value for ``attr``. Therefore, for consistency, access attributes using `Section.__call__()`_ like above if you wish to **always receive an iterable** form of the attributes.
 
@@ -220,66 +252,6 @@ Properties/methods
 Each ``sections()`` call returns a structure containing nodes of a unique class created in a class factory function, where the unique class definition contains no logic except that it inherits from the Section class. This allows properties/methods added to one structure's class definition to not affect the class definitions of nodes from other structures.
 
 --------------
-Printing
---------------
-
-Section structures can be visualized through the `Section.deep_str()`_ method as follows:
-
-
-.. code-block:: python
-
-    library = sections(
-        {"My Bookshelf"},
-        [{'Fantasy'}, 'LOTR', 'Harry Potter'],
-        [{'Academic'}, 'Advanced Mathematics', 'Physics for Engineers'],
-        topics=[{'All my books'},
-                [{'Imaginary things'}, 'Hobbits', 'Wizards'],
-                [{'School'}, 'Numbers', 'Forces']],
-    )
-    print(library.deep_str())
-
-Output:
-
-.. code-block:: python
-
-    ###############################################################################
-    <class 'Section'> structure
-
-    'My Bookshelf' = <root, parent>
-        parent = None
-        children = ['Fantasy', 'Academic']
-        topics = 'All my books'
-
-    'Fantasy' = <child, parent>
-        parent = 'My Bookshelf'
-        children = ['LOTR', 'Harry Potter']
-        topics = 'Imaginary things'
-
-    'Academic' = <child, parent>
-        parent = 'My Bookshelf'
-        children = ['Advanced Mathematics', 'Physics for Engineers']
-        topics = 'School'
-
-    'LOTR' = <child, leaf>
-        parent = 'Fantasy'
-        topics = 'Hobbits'
-
-    'Harry Potter' = <child, leaf>
-        parent = 'Fantasy'
-        topics = 'Wizards'
-
-    'Advanced Mathematics' = <child, leaf>
-        parent = 'Academic'
-        topics = 'Numbers'
-
-    'Physics for Engineers' = <child, leaf>
-        parent = 'Academic'
-        topics = 'Forces'
-    ###############################################################################
-
-See the References_ section of the docs for more printing options.
-
---------------
 Subclassing
 --------------
 
@@ -289,6 +261,7 @@ Inheriting Section is easy, the only requirement is to call ``super().__init__(*
                     :start-after: sphinx-start-subclassing
                     :end-before: sphinx-end-subclassing
                     :dedent: 4
+                    :language: python
 
 ``Section.__init__()`` assigns the kwds values passed to it to the object attributes, and the passed kwds are generated during instantiation by a metaclass.
 
@@ -301,12 +274,13 @@ Each non-leaf Section node keeps a cache containing quickly readable references 
 The caches allow instant reading of sub-lists/dicts in Θ(1) time and can often
 make structure attribute reading faster by 5x, or even much more when the
 structure is rarely being modified.
+If preferred, turn this feature off to avoid the extra memory consumption it causes. Do this by modifying the node or structure's class attribute ``use_cache`` to ``False`` as follows:
 
-However, for structures representing lists/dicts with more than 1000 - 10,000
-elements, the extra memory consumption that this technique uses may start to
-make it not beneficial to use. It is therefore recommended to consider changing
-the node or structure's class attribute ``use_cache`` to ``False`` for
-structures in this range or larger. This can be done as follows:
+..
+   For structures representing lists/dicts with more than 1000 - 10,000
+   elements, the extra memory consumption that this technique uses may start to
+   make it not beneficial to use.
+
 
 .. code-block:: python
 
@@ -314,16 +288,6 @@ structures in this range or larger. This can be done as follows:
     sect.use_cache = False              # turn off for just the root node
     sect.cls.use_cache = False          # turn off for all nodes in `sect`
     sections.Section.use_cache = False  # turn off for all structures
-
-The dict option for ``gettype`` in the `Section.__call__()`_ method is
-currently slower than the other options. For performance-critical uses, use the
-other options for ``gettype``.
-Alternatively, if a dict is required just for
-visual printing purposes, use the faster ``'full_dict'`` option for ``gettype``
-instead. This option returns dicts with valid values with keys that also have string
-representations of the node names, but the raw form of the keys are references to
-node objects and cannot be referenced by the user through strings.
-See the `Section.__call__()`_ method in the References section of the docs for more details on the ``gettype`` options.
 
 .. _References: https://sections.readthedocs.io/en/latest/reference/index.html
 .. _Section.get_node_attr(): https://sections.readthedocs.io/en/latest/reference/#sections.Section.get_node_attr

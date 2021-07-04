@@ -76,5 +76,10 @@ docs/build
 
 # Debugging logs
 *outlog*
+_notes.rst
+test_isolated.py
 
+_commit_message.txt
+
+# No longer used settings files
 .appveyor.yml

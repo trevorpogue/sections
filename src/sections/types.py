@@ -31,14 +31,13 @@ SectionParent = NewType('SectionParent', Union[SectionType, None])
 # A shorthand form for an arbitrary dict
 AnyDict = NewType('AnyDict', Dict[Any, Any])
 
-# Valid values for the class Section.gettype:
-default = NewType('default', 'default')       # use self.default_gettype
+# Valid values for the gettype arg used in Section.__call__:
+# to denote use self.default_gettype
+use_default_gettype = NewType('use_default_gettype', 'default')
 # use hybrid getattr method (see Section.__call__ docstring for more info
 hybrid = NewType('hybrid', 'hybrid')
-# use full_dict getattr method (see Section.__call__ docstring for more info)
-full_dict = NewType('full_dict', 'full_dict')
 GetType = NewType('GetType', Union[
-    default, hybrid, list, iter, dict, full_dict
+    use_default_gettype, hybrid, list, iter, dict
 ])
 
 
@@ -55,11 +54,7 @@ class SectionNoneType:
         keys/names of unnamed nodes, and printing 'section' as the node's name
         makes its printed representation look more sensical.
         """
-        return 'section'
-
-    def __repr__(self) -> str:
-        """This is used for the same reason as for __str__."""
-        return "'section'"
+        return 'sections'
 
 
 # SectionNoneType instantiation, like how None is an instantiation of NoneType

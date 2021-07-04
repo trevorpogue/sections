@@ -2,15 +2,21 @@ import sections
 
 
 def test_docs_examples_usage() -> None:
+    print_file = './docs/examples_print_output.txt'
+    with open(print_file, 'w') as f:
+        f.write('')
     # sphinx-start-usage
     import sections
 
     menu = sections(
         'Breakfast', 'Dinner',
-        mains=['Bacon&Eggs', 'Burger'],
-        sides=['HashBrown', 'Fries'],
+        main=['Bacon&Eggs', 'Burger'],
+        side=['HashBrown', 'Fries'],
     )
-    # Resulting structure's API and the expected results:
+    # sphinx-end-usage
+    # print(menu)
+    # sphinx-start-usage-assert
+    # menu's API with the expected results:
     assert menu.mains == ['Bacon&Eggs', 'Burger']
     assert menu.sides == ['HashBrown', 'Fries']
     assert menu['Breakfast'].main == 'Bacon&Eggs'
@@ -24,7 +30,49 @@ def test_docs_examples_usage() -> None:
     # child sections/nodes:
     assert isinstance(menu['Breakfast'], sections.Section)
     assert isinstance(menu['Dinner'], sections.Section)
-    # sphinx-end-usage
+    # sphinx-end-usage-assert
+    s = ''
+    s += '# sphinx-start-usage\n'
+    s += '$ print(menu)\n'
+    ps = str(menu)
+    ps = ps[1:]
+    s += ps
+    s += '# sphinx-end-usage\n'
+    with open(print_file, 'a') as f:
+        f.write(s)
+
+    library = sections(
+        {"My Bookshelf"},
+        [{'Fiction'}, 'LOTR', 'Harry Potter'],
+        [{'Non-Fiction'}, 'General Relativity', 'A Brief History of Time'],
+        author=[['JRR Tolkien', 'JK Rowling'],
+                ['Albert Einstein', 'Steven Hawking']],
+        topic=[[{'Fantasy'}, 'Hobbits', 'Wizards'],
+               [{'Physics'}, 'Time, Gravity', 'Big Bang, Black Holes']],
+    )
+    # sphinx-start-complex
+    library = sections(
+        "My Bookshelf",
+        sections({'Fiction'},
+                 'LOTR', 'Harry Potter',
+                 author=['JRR Tolkien', 'JK Rowling'],
+                 topic=[{'Fantasy'}, 'Hobbits', 'Wizards'],),
+        sections({'Non-Fiction'},
+                 'General Relativity', 'A Brief History of Time',
+                 author=['Albert Einstein', 'Steven Hawking'],
+                 topic=[{'Physics'}, 'Time, Gravity', 'Black Holes'],
+                 ),
+    )
+    # sphinx-end-complex
+    s = ''
+    s += '# sphinx-start-complex\n'
+    s += '$ print(menu)\n'
+    ps = str(library)
+    ps = ps[1:]
+    s += ps
+    s += '# sphinx-end-complex\n'
+    with open(print_file, 'a') as f:
+        f.write(s)
 
     # sphinx-start-plural-singular
     tasks = sections('pay bill', 'clean', status=['completed', 'started'])
@@ -110,8 +158,8 @@ def test_docs_examples_details() -> None:
     # sphinx-start-names
     books = sections(
         'LOTR', 'Harry Potter',
-        topics=['Hobbits', 'Wizards'],
-        authors=['JRR Tolkien', 'JK Rowling']
+        topic=['Hobbits', 'Wizards'],
+        author=['JRR Tolkien', 'JK Rowling']
     )
     assert books.names == ['LOTR', 'Harry Potter']
     assert books['LOTR'].name == 'LOTR'
@@ -124,7 +172,7 @@ def test_docs_examples_details() -> None:
     assert sect.name is sections.SectionNone
 
     # the string representation of sections.SectionNone is 'section':
-    assert str(sect.name) == 'section'
+    assert str(sect.name) == 'sections'
     # sphinx-end-names-printing
 
     # Parent Names
@@ -133,9 +181,9 @@ def test_docs_examples_details() -> None:
         {"My Bookshelf"},
         [{'Fantasy'}, 'LOTR', 'Harry Potter'],
         [{'Academic'}, 'Advanced Mathematics', 'Physics for Engineers'],
-        topics=[{'All my books'},
-                [{'Imaginary things'}, 'Hobbits', 'Wizards'],
-                [{'School'}, 'Numbers', 'Forces']],
+        topic=[{'All my books'},
+               [{'Imaginary things'}, 'Hobbits', 'Wizards'],
+               [{'School'}, 'Numbers', 'Forces']],
     )
     assert library.name == "My Bookshelf"
     assert library.sections.names == ['Fantasy', 'Academic']
@@ -153,9 +201,11 @@ def test_docs_examples_details() -> None:
     # sphinx-start-subclassing
     class Library(sections.Section):
         """My library class."""
-        def __init__(price="Custom default value", **kwds):
+
+        def __init__(self, price="Custom default value", **kwds):
             """Pass **kwds to super."""
             super().__init__(**kwds)
+            self.price = price
 
         @property
         def genres(self):
@@ -173,7 +223,7 @@ def test_docs_examples_details() -> None:
         @property
         def titles(self):
             """A synonym for names."""
-            return self.names
+            return self.leaves.names
 
         def critique(self, review="Haven't read it yet", rating=0):
             """Set the book price based on the rating."""
@@ -201,7 +251,7 @@ def test_docs_examples_details() -> None:
     # sphinx-end-subclassing
 
     # sphinx-start-getattr-options
-    menu = sections('Breakfast', 'Dinner', sides=['HashBrown', 'Fries'])
+    menu = sections('Breakfast', 'Dinner', side=['HashBrown', 'Fries'])
 
     # return as list always, even if a single element is returned
     assert menu('sides', list) == ['HashBrown', 'Fries']
@@ -244,5 +294,3 @@ def test_docs_examples_details() -> None:
 
     assert sect.sections.names == [0, 1]
     assert sect.name is sections.SectionNone
-    # the string representation of sections.SectionNone is 'root'
-    assert str(sect.name) == 'section'
