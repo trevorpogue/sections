@@ -16,7 +16,7 @@ def readme():
 
 setup(
     name='sections',
-    version='0.0.2',
+    version='0.0.3',
     license='MIT',
     description=('Flexible tree data structures for organizing lists and dicts'
                  + ' into sections.'),

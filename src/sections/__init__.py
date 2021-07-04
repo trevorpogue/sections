@@ -4,7 +4,7 @@ Flexible tree data structures for organizing lists and dicts into sections.
 https://github.com/trevorpogue/sections
 """
 
-__version__ = '0.0.2'
+__version__ = '0.0.3'
 __all__ = ['MetaSection', 'Section', 'SectionNone']
 
 import sys
