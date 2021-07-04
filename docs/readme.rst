@@ -242,6 +242,7 @@ If you don't like this feature, simply turn it off using the following:
                     :start-after: sphinx-start-plural-singular-disable
                     :end-before: sphinx-end-plural-singular-disable
                     :dedent: 4
+                    :language: python
 
 Note, however, that this will still traverse descendant nodes to see if they
 contain the requested attribute. To stop using this feature also, access

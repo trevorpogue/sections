@@ -74,17 +74,16 @@ Sections is designed to be:
 
 * **Reliable**: Contains an exhaustive test suite and 100% code coverage.
 
-
+----------------------------------------------------------------
 Links
-=====
-
+----------------------------------------------------------------
 * `GitHub <https://github.com/trevorpogue/sections>`_
 
 * `Documentation <https://sections.readthedocs.io>`_
 
-
+=========================
 Usage
-*****
+=========================
 
 .. code-block:: bash
 
@@ -186,8 +185,9 @@ Usage
     ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 
 
+----------------------------------------------------------------
 Attrs: Plural/singular hybrid attributes and more
-=================================================
+----------------------------------------------------------------
 
 Spend less time deciding between using the singular or plural form for an attribute name:
 
@@ -201,8 +201,9 @@ Spend less time deciding between using the singular or plural form for an attrib
 If you don’t like this feature, simply turn it off as shown in the **Details - Plural/singular attributes** section.
 
 
+--------------------------------------------------------------------
 Properties: Easily add on the fly
-=================================
+--------------------------------------------------------------------
 
 Properties and methods are automatically added to all nodes in a structure returned from a ``sections()`` call when passed as keyword arguments:
 
@@ -220,8 +221,9 @@ Properties and methods are automatically added to all nodes in a structure retur
 Adding properties and methods this way doesn’t affect the class definitions of Sections/nodes from other structures. See the **Details - Properties/methods** section for how this works.
 
 
+--------------------------------------------------------------------
 Construction: Build gradually or all at once
-============================================
+--------------------------------------------------------------------
 
 Construct section-by-section, section-wise, attribute-wise, or other ways:
 
@@ -272,12 +274,14 @@ Construct section-by-section, section-wise, attribute-wise, or other ways:
    demo_different_construction_techniques()
 
 
+=========================
 Details
-*******
+=========================
 
 
+--------------------------------------------------------------------
 Section names
-=============
+--------------------------------------------------------------------
 
 The non-keyword arguments passed into a ``sections()`` call define the section names and are accessed through the attribute ``name``. The names are used like ``keys`` in a ``dict`` to access each child section of the root section node:
 
@@ -304,8 +308,9 @@ Names are optional, and by default, children names are assigned as integer value
    assert str(sect.name) == 'sections'
 
 
+----------------------------------------------------------------
 Parent names and attributes
-===========================
+----------------------------------------------------------------
 
 A parent section name can optionally be provided as the first argument in a ``sections()`` call by defining it in a set (surrounding it with curly brackets). This strategy avoids an extra level of braces when instantiating Section objects. This idea applies also for defining parent attributes:
 
@@ -331,8 +336,9 @@ A parent section name can optionally be provided as the first argument in a ``se
    assert library['Academic'].topic == 'School'
 
 
+----------------------------------------------------------------
 Return attributes as a list, dict, or iterable
-==============================================
+----------------------------------------------------------------
 
 Access the data in different forms with the ``gettype`` argument in `Section.__call__() <https://sections.readthedocs.io/en/latest/reference/#sections.Section.__call__>`_ as follows:
 
@@ -379,8 +385,9 @@ Set the default return type when accessing structure attributes by changing ``Se
 The above will also work for accessing attributes in the form ``object.attr`` but only if the node does not contain the attribute ``attr``, otherwise it will return the non-iterable raw value for ``attr``. Therefore, for consistency, access attributes using `Section.__call__() <https://sections.readthedocs.io/en/latest/reference/#sections.Section.__call__>`_ like above if you wish to **always receive an iterable** form of the attributes.
 
 
+----------------------------------------------------------------
 Plural/singular attributes
-==========================
+----------------------------------------------------------------
 
 When an attribute is not found in a Section node, both the plural and singular
 forms of the word are then checked to see if the node contains the attribute
@@ -392,7 +399,7 @@ corresponding value is whatever name was given in the keyword argument’s key
 
 If you don’t like this feature, simply turn it off using the following:
 
-::
+.. code-block:: python
 
    import pytest
    tasks = sections('pay bill', 'clean', status=['completed', 'started'])
@@ -408,14 +415,16 @@ contain the requested attribute. To stop using this feature also, access
 attributes using the `Section.get_node_attr() <https://sections.readthedocs.io/en/latest/reference/#sections.Section.get_node_attr>`_ method instead.
 
 
+----------------------------------------------------------------
 Properties/methods
-==================
+----------------------------------------------------------------
 
 Each ``sections()`` call returns a structure containing nodes of a unique class created in a class factory function, where the unique class definition contains no logic except that it inherits from the Section class. This allows properties/methods added to one structure’s class definition to not affect the class definitions of nodes from other structures.
 
 
+----------------------------------------------------------------
 Subclassing
-===========
+----------------------------------------------------------------
 
 Inheriting Section is easy, the only requirement is to call ``super().__init__(**kwds)`` at some point in ``__init__()``  like below if you override that method:
 
@@ -474,8 +483,9 @@ Inheriting Section is easy, the only requirement is to call ``super().__init__(*
 ``Section.__init__()`` assigns the kwds values passed to it to the object attributes, and the passed kwds are generated during instantiation by a metaclass.
 
 
+----------------------------------------------------------------
 Performance
-===========
+----------------------------------------------------------------
 
 Each non-leaf Section node keeps a cache containing quickly readable references to attribute dicts previously parsed from manually traversing through descendant nodes in an earlier read. The caches are invalidated accordingly for modified nodes and their ancestors when the tree structure or node attribute values change.
 
