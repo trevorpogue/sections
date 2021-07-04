@@ -111,13 +111,16 @@ class SectionAttrParser:
             attrs = {}
             for child in self.values():
                 attrs.update(child._get_nearest_attr(name))
-            if self.use_cache and not self.isleaf:
-                self.__cache[name] = attrs
-                if self.use_pluralsingular:
-                    plural, singular = self.__pluralizer(name)
-                    self.__cache[plural] = attrs
-                    self.__cache[singular] = attrs
+            self.__update_cache(name, attrs)
         return attrs
+
+    def __update_cache(self, name: str, attrs: Any) -> None:
+        if self.use_cache and not self.isleaf:
+            self.__cache[name] = attrs
+            if self.use_pluralsingular:
+                plural, singular = self.__pluralizer(name)
+                self.__cache[plural] = attrs
+                self.__cache[singular] = attrs
 
     def __get_self_attr(self, name: str) -> AnyDict:
         """

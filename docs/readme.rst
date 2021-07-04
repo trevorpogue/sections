@@ -70,7 +70,11 @@ Sections is designed to be:
 * **Fast**: Made with performance in mind - access lists and sub-lists/dicts in Θ(1) time in many cases. See the Performance section for the full details.
 * **Reliable**: Contains an exhaustive test suite and 100\% code coverage.
 
-See the GitHub page at https://github.com/trevorpogue/sections. See also the References_ section of these docs for more thorough documentation of all the interfacing methods for Section objects.
+----------------------------------------------------------------
+Links
+----------------------------------------------------------------
+* GitHub_
+* Documentation_
 
 =========================
 Usage
@@ -274,7 +278,7 @@ Each non-leaf Section node keeps a cache containing quickly readable references 
 The caches allow instant reading of sub-lists/dicts in Θ(1) time and can often
 make structure attribute reading faster by 5x, or even much more when the
 structure is rarely being modified.
-If preferred, turn this feature off to avoid the extra memory consumption it causes. Do this by modifying the node or structure's class attribute ``use_cache`` to ``False`` as follows:
+If preferred, turn this feature off to avoid the extra memory consumption it causes by modifying the node or structure's class attribute ``use_cache`` to ``False`` as follows:
 
 ..
    For structures representing lists/dicts with more than 1000 - 10,000
@@ -293,3 +297,5 @@ If preferred, turn this feature off to avoid the extra memory consumption it cau
 .. _Section.get_node_attr(): https://sections.readthedocs.io/en/latest/reference/#sections.Section.get_node_attr
 .. _Section.__call__(): https://sections.readthedocs.io/en/latest/reference/#sections.Section.__call__
 .. _Section.deep_str(): https://sections.readthedocs.io/en/latest/reference/#sections.Section.deep_str
+.. _GitHub: https://github.com/trevorpogue/sections
+.. _Documentation: https://sections.readthedocs.io

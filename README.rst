@@ -22,7 +22,13 @@ Sections is designed to be:
 
 * **Reliable**: Contains an exhaustive test suite and 100% code coverage.
 
-See the GitHub page at `https://github.com/trevorpogue/sections <https://github.com/trevorpogue/sections>`_. See also the `References <https://sections.readthedocs.io/en/latest/reference/index.html>`_ section of these docs for more thorough documentation of all the interfacing methods for Section objects.
+
+Links
+=====
+
+* `GitHub <https://github.com/trevorpogue/sections>`_
+
+* `Documentation <https://sections.readthedocs.io>`_
 
 
 Usage
@@ -424,7 +430,7 @@ Each non-leaf Section node keeps a cache containing quickly readable references 
 The caches allow instant reading of sub-lists/dicts in Θ(1) time and can often
 make structure attribute reading faster by 5x, or even much more when the
 structure is rarely being modified.
-If preferred, turn this feature off to avoid the extra memory consumption it causes. Do this by modifying the node or structure’s class attribute ``use_cache`` to ``False`` as follows:
+If preferred, turn this feature off to avoid the extra memory consumption it causes by modifying the node or structure’s class attribute ``use_cache`` to ``False`` as follows:
 
 .. code-block:: python
 
