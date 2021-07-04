@@ -93,7 +93,6 @@ Usage
 .. literalinclude:: ./examples_print_output.txt
                     :start-after: sphinx-start-usage
                     :end-before: sphinx-end-usage
-                    :language: python
 
 .. literalinclude:: ../tests/test_doc_examples.py
                     :start-after: sphinx-start-usage-assert
@@ -112,7 +111,6 @@ Usage
 .. literalinclude:: ./examples_print_output.txt
                     :start-after: sphinx-start-complex
                     :end-before: sphinx-end-complex
-                    :language: python
 
 ----------------------------------------------------------------
 Attrs: Plural/singular hybrid attributes and more

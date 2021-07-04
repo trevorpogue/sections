@@ -66,7 +66,7 @@ def test_docs_examples_usage() -> None:
     # sphinx-end-complex
     s = ''
     s += '# sphinx-start-complex\n'
-    s += '$ print(menu)\n'
+    s += '$ print(library)\n'
     ps = str(library)
     ps = ps[1:]
     s += ps

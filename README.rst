@@ -50,8 +50,9 @@
 
 .. end-badges
 
+==============================
 [ s e | c t | i o | n s ]
-*************************
+==============================
 
 |coveralls| |codacy| |codeclimate| |requires|
 
@@ -99,7 +100,7 @@ Usage
        side=['HashBrown', 'Fries'],
    )
 
-.. code-block:: python
+::
 
    $ print(menu)
     _________________________
@@ -149,9 +150,9 @@ Usage
                 ),
    )
 
-.. code-block:: python
+::
 
-   $ print(menu)
+   $ print(library)
     ________________________________________
    │ 'My Bookshelf'                         │
    │    ______________________________      │
