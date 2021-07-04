@@ -23,3 +23,17 @@ Changelog
 * Fix bug when using Section.leaves or Section.children
 * Add tests/test_indepth_usage.py
 * Update readme/docs
+
+------------------
+0.0.3
+------------------
+
+* improve __str__ to be visually intuitive
+* add descendants, flat properties
+* add insert methods
+* add feature for default attr to search for in __call__
+* can add lists as node attrs if attr name starts with '_'
+* make plural_singular work for properties/methods also
+* add structure_change() function for use when subclassing
+* add testcases
+* safer internal attrs prefix/rename classes with Section prefix
