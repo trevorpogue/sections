@@ -3,6 +3,7 @@ from types import FunctionType
 from typing import Any
 from typing import List
 from typing import Tuple
+from typing import Union
 
 from .types import AnyDict
 from .types import SectionAttr
@@ -192,6 +193,17 @@ class MetaSection(type):
             if len(v) > child_i:
                 child_attrs[k] = v[child_i]
         child = _get_dictval_i(node, child_i)
+        self.__contruct_child_from_dict_or_cls(
+            child, child_attrs, child_i, keyname, node)
+
+    def __contruct_child_from_dict_or_cls(
+            self,
+            child: Union[SectionType, None],
+            child_attrs: SectionAttrs,
+            child_i: int,
+            keyname: str,
+            node: SectionType,
+    ) -> None:
         if child:  # if child is Section instance
             for name, value in child_attrs.items():
                 setattr(child, name, value)

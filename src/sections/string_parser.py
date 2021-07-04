@@ -89,6 +89,10 @@ class SectionStringParser:
         for i, child in enumerate(self.values()):
             s += child.__descendants_str(
                 depth + 1, cur_depths_s)
+        s = self.__get_box_str(s, lpad)
+        return s
+
+    def __get_box_str(self, s: str, lpad: str) -> str:
         header_len = 0
         for line in s[:-1].split('\n'):
             if len(line) > header_len:
